@@ -174,7 +174,7 @@ Gemma4 在并行调用上本身就很强（78.3% zero-shot），因此针对并�
 
 ---
 
-## 9. Claude Opus 4.6 标杆测试（100 条抽样）
+## 9. Claude Opus 4.6 标杆测试（400 条抽样）
 
 Claude Opus 4.6 作为当前最强的通用大模型之一，被用作本实验的**准确率标杆**（upper bound reference）。
 
@@ -184,39 +184,37 @@ Claude Opus 4.6 作为当前最强的通用大模型之一，被用作本实验�
 
 1. **Sub-agent 隔离调用**：每道题目通过独立的 Claude Code sub-agent 执行，sub-agent 之间**没有共享上下文**，不会从前一道题的答案中学习
 2. **Ground truth 移除**：评估数据中**完全删除了标准答案字段**（`ground_truth`），防止模型通过上下文中的答案信息作弊。首次实验意外保留了 ground truth，发现后重新制作了 `claude_batch_*_clean.json` 并重跑
-3. **分层抽样**：从 782 条测试数据中按类别比例分层抽取 100 条，确保类别分布与完整测试集一致
+3. **分层抽样**：从 782 条测试数据中按类别比例分层抽取 400 条（分 4 轮，每轮 100 条），确保类别分布与完整测试集一致
 4. **文本格式工具调用**：Claude 不使用原生 `tool_use` API，而是通过文本提示描述可用工具，模型以文本形式输出工具调用（JSON 格式），与其他模型的原生工具调用格式不同
 
 ### 标杆结果
 
-| 模型 | 准确率（200 条） |
+| 模型 | 准确率（400 条） |
 |------|-----------------|
-| **Claude Opus 4.6** | **85.0%** |
+| **Claude Opus 4.6** | **84.0%** |
 | Gemma4 26B | — |
 | Doubao-Code（思考） | — |
 | Volcengine Auto | — |
 
-Claude 在 simple、javascript、live_parallel_multiple 类别上达到 100%，parallel 和 multiple 达到 94%。
-
-各类别详细结果（200 条）：
+各类别详细结果（400 条）：
 
 | 类别 | 准确率 |
 |------|--------|
-| simple | 100% |
-| javascript | 100% |
-| live_parallel_multiple | 100% |
-| multiple | 94% |
-| parallel | 94% |
-| java | 88% |
-| live_multiple | 86% |
-| parallel_multiple | 75% |
-| live_simple | 74% |
-| live_parallel | 50% |
-| sql | 25% |
+| simple | 98.4% |
+| multiple | 96.8% |
+| parallel | 93.5% |
+| live_simple | 84.6% |
+| live_multiple | 83.8% |
+| java | 81.2% |
+| parallel_multiple | 77.4% |
+| javascript | 75.0% |
+| live_parallel_multiple | 75.0% |
+| live_parallel | 33.3% |
+| sql | 18.8% |
 
 有趣的是，在首轮 100 条实验中，无污染版本（87%）的准确率反而**高于**有污染版本（83%）。推测原因是 ground truth 字段的存在干扰了模型的注意力分配。
 
-> 注：Claude 评估了 200/782 条（受 API 用量限制）。后续可在额度允许时补全完整测试。
+> 注：Claude 评估了 400/782 条（受 API 用量限制）。后续可在额度允许时补全完整测试。
 
 ---
 
