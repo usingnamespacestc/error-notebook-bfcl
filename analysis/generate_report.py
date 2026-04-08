@@ -309,11 +309,10 @@ We developed an **Error Notebook** (错题本) approach for improving LLM tool-c
 |----------|----------------|------------|
 | Zero-shot baseline | 68.0% | 76.3% |
 | Error Notebook (error-only) | **79.0% (+11.0pp)** | — |
-| Error Notebook (mixed 5+5) | 76.3% (+8.3pp) | 77.6%* (+1.3pp) |
+| Error Notebook (mixed 5+5) | 76.3% (+8.3pp) | 78.6% (+2.3pp) |
 | Interleaved (alternating) | **79.0% (+11.0pp)** | — |
 | Correct-only few-shot | 64.7% (-3.3pp) | — |
 
-*Gemma4 error-NB based on 634/782 entries
 
 **Main finding**: Error correction examples provide all the improvement. Positive examples alone actually hurt performance (-3.3pp). The benefit is largest for models that are weak on parallel function calling.
 
