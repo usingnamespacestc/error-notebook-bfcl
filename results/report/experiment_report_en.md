@@ -51,7 +51,7 @@ Two critical bugs were discovered and fixed in the BFCL AST checker:
 | Gemma4 26B | Local (Ollama) | Native tool calling, thinking enabled |
 | Volcengine Auto (ark-code-latest) | Cloud API | Volcano Engine coding model |
 | Doubao-Seed-2.0-Code | Cloud API | With and without thinking |
-| Claude Opus 4.6 | Sub-agent | Text-based tool calling (100 sample) |
+| Claude Opus 4.6 | Sub-agent | Text-based tool calling (200 sample) |
 
 ---
 

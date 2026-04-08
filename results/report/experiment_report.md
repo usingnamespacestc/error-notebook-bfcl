@@ -170,18 +170,34 @@ Claude Opus 4.6 作为当前最强的通用大模型之一，被用作本实验�
 
 ### 标杆结果
 
-| 模型 | 准确率（同 100 条） |
-|------|-------------------|
-| **Claude Opus 4.6** | **87.0%** |
-| Gemma4 26B | 75.0% |
-| Doubao-Code（思考） | 69.0% |
-| Volcengine Auto | 60.0% |
+| 模型 | 准确率（200 条） |
+|------|-----------------|
+| **Claude Opus 4.6** | **85.0%** |
+| Gemma4 26B | — |
+| Doubao-Code（思考） | — |
+| Volcengine Auto | — |
 
-Claude 在 simple、multiple、parallel、java、live_parallel 和 live_parallel_multiple 类别上达到 100%。这些均为**无上下文污染**版本的结果。
+Claude 在 simple、javascript、live_parallel_multiple 类别上达到 100%，parallel 和 multiple 达到 94%。
 
-有趣的是，无污染版本（87%）的准确率反而**高于**有污染版本（83%）。推测原因是 ground truth 字段的存在干扰了模型的注意力分配，使其在部分类别上表现更差（如 parallel 从 100% 降至 88%，sql 从 25% 降至 0%）。
+各类别详细结果（200 条）：
 
-> 注：Claude 仅评估了 100 条（受 API 用量限制），其他模型在完整 782 条上的准确率更具统计显著性。后续可在额度允许时补全 Claude 的完整测试。
+| 类别 | 准确率 |
+|------|--------|
+| simple | 100% |
+| javascript | 100% |
+| live_parallel_multiple | 100% |
+| multiple | 94% |
+| parallel | 94% |
+| java | 88% |
+| live_multiple | 86% |
+| parallel_multiple | 75% |
+| live_simple | 74% |
+| live_parallel | 50% |
+| sql | 25% |
+
+有趣的是，在首轮 100 条实验中，无污染版本（87%）的准确率反而**高于**有污染版本（83%）。推测原因是 ground truth 字段的存在干扰了模型的注意力分配。
+
+> 注：Claude 评估了 200/782 条（受 API 用量限制）。后续可在额度允许时补全完整测试。
 
 ---
 

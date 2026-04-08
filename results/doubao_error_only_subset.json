@@ -1,0 +1,911 @@
+{
+  "correct_examples": [],
+  "error_examples": [
+    {
+      "id": "parallel_67",
+      "category": "parallel",
+      "question": [
+        [
+          {
+            "role": "user",
+            "content": "\"Can you calculate the area of two circles, one with a radius of 5 meters and the other with a radius of 10 meters, and then compare the two areas to determine which circle is larger and by how much?\""
+          }
+        ]
+      ],
+      "function": [
+        {
+          "name": "geometry.calculate_area_circle",
+          "description": "Calculate the area of a circle given its radius.",
+          "parameters": {
+            "type": "dict",
+            "properties": {
+              "radius": {
+                "type": "integer",
+                "description": "The radius of the circle."
+              },
+              "unit": {
+                "type": "string",
+                "description": "The measurement unit of the radius (optional parameter, default is 'cm')."
+              }
+            },
+            "required": [
+              "radius"
+            ]
+          }
+        }
+      ],
+      "ground_truth": [
+        {
+          "geometry.calculate_area_circle": {
+            "radius": [
+              5
+            ],
+            "unit": [
+              "meters",
+              "m"
+            ]
+          }
+        },
+        {
+          "geometry.calculate_area_circle": {
+            "radius": [
+              10
+            ],
+            "unit": [
+              "meters",
+              "m"
+            ]
+          }
+        }
+      ],
+      "error_type": "parallel_function_checker_no_order:wrong_count",
+      "error_detail": [
+        "Wrong number of functions."
+      ],
+      "model_wrong_output": [
+        {
+          "geometry.calculate_area_circle": {
+            "radius": 5,
+            "unit": "meters"
+          }
+        }
+      ]
+    },
+    {
+      "id": "live_multiple_617-159-10",
+      "category": "live_multiple",
+      "question": [
+        [
+          {
+            "role": "user",
+            "content": "I'll be in Los Angeles on March 10th. Can you look up any music events happening on that date?"
+          }
+        ]
+      ],
+      "function": [
+        {
+          "name": "Events_3_FindEvents",
+          "description": "Find cultural events, such as concerts and plays, happening in a specified city. The search can be filtered by event type and date.",
+          "parameters": {
+            "type": "dict",
+            "required": [
+              "event_type",
+              "city"
+            ],
+            "properties": {
+              "event_type": {
+                "type": "string",
+                "description": "The type of cultural event to find.",
+                "enum": [
+                  "Music",
+                  "Theater"
+                ]
+              },
+              "city": {
+                "type": "string",
+                "description": "The city in which to search for events, in the format of 'City, State' (e.g., 'New York, NY')."
+              },
+              "date": {
+                "type": "string",
+                "description": "The date for which to find events, formatted as 'YYYY-MM-DD'. If set to 'dontcare', any date is considered.",
+                "default": "dontcare"
+              }
+            }
+          }
+        },
+        {
+          "name": "Events_3_BuyEventTickets",
+          "description": "Purchase tickets for a specified cultural event on a particular date in a designated city.",
+          "parameters": {
+            "type": "dict",
+            "required": [
+              "event_name",
+              "number_of_tickets",
+              "date",
+              "city"
+            ],
+            "properties": {
+              "event_name": {
+                "type": "string",
+                "description": "The name of the artist or play for which tickets are being purchased."
+              },
+              "number_of_tickets": {
+                "type": "integer",
+                "description": "The quantity of tickets to be reserved for the event."
+              },
+              "date": {
+                "type": "string",
+                "description": "The date of the event, in the format 'YYYY-MM-DD'."
+              },
+              "city": {
+                "type": "string",
+                "description": "The city where the event will take place, in the format of 'City, State', such as 'Berkeley, CA' or 'New York, NY'."
+              }
+            }
+          }
+        },
+        {
+          "name": "Hotels_4_ReserveHotel",
+          "description": "Reserve rooms at a selected hotel for given dates.",
+          "parameters": {
+            "type": "dict",
+            "properties": {
+              "place_name": {
+                "type": "string",
+                "description": "The name of the hotel or accommodation."
+              },
+              "check_in_date": {
+                "type": "string",
+                "description": "The check-in date for the reservation, in the format of 'YYYY-MM-DD'."
+              },
+              "stay_length": {
+                "type": "integer",
+                "description": "The length of stay in number of days."
+              },
+              "location": {
+                "type": "string",
+                "description": "The location of the accommodation, in the format of 'City, State' or 'City, Country' if the city does not locate in the United States."
+              },
+              "number_of_rooms": {
+                "type": "string",
+                "description": "The number of rooms to reserve.",
+                "enum": [
+                  "1",
+                  "2",
+                  "3",
+                  "dontcare"
+                ],
+                "default": "dontcare"
+              }
+            },
+            "required": [
+              "place_name",
+              "check_in_date",
+              "stay_length",
+              "location"
+            ]
+          }
+        },
+        {
+          "name": "Hotels_4_SearchHotel",
+          "description": "Search for accommodations in a specified city, filtering by star rating, smoking policy, and number of rooms required.",
+          "parameters": {
+            "type": "dict",
+            "required": [
+              "location"
+            ],
+            "properties": {
+              "location": {
+                "type": "string",
+                "description": "The city or town where the accommodation is being searched for. Format: 'City, Country' if the city does not locate in the United States (e.g., 'Paris, FR')."
+              },
+              "star_rating": {
+                "type": "string",
+                "description": "The desired star rating of the accommodation.",
+                "enum": [
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "5",
+                  "dontcare"
+                ],
+                "default": "dontcare"
+              },
+              "smoking_allowed": {
+                "type": "boolean",
+                "description": "Indicates whether smoking is allowed inside the accommodation.",
+                "default": false
+              },
+              "number_of_rooms": {
+                "type": "integer",
+                "description": "The number of rooms to reserve. If no specific number is desired, choose '0' to indicate no preference.",
+                "default": 0
+              }
+            }
+          }
+        }
+      ],
+      "ground_truth": [
+        {
+          "Events_3_FindEvents": {
+            "event_type": [
+              "Music"
+            ],
+            "city": [
+              "Los Angeles, CA"
+            ],
+            "date": [
+              "2023-03-10"
+            ]
+          }
+        }
+      ],
+      "error_type": "value_error:string",
+      "error_detail": [
+        "Invalid value for parameter 'date': '2024-03-10'. Expected one of ['2023-03-10']. Case insensitive."
+      ],
+      "model_wrong_output": [
+        {
+          "Events_3_FindEvents": {
+            "event_type": "Music",
+            "city": "Los Angeles, CA",
+            "date": "2024-03-10"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sql_92",
+      "category": "sql",
+      "question": [
+        {
+          "role": "user",
+          "content": "Can you create a new table named \"Employee\" in the database with columns \"EmployeeID\", \"FirstName\", \"LastName\", \"Email\", and \"Phone\"?"
+        }
+      ],
+      "function": [
+        {
+          "name": "sql.execute",
+          "description": "Execute SQL queries based on user-defined parameters like SQL keyword, table name, column names, and conditions.",
+          "parameters": {
+            "type": "dict",
+            "properties": {
+              "sql_keyword": {
+                "type": "string",
+                "enum": [
+                  "SELECT",
+                  "INSERT",
+                  "UPDATE",
+                  "DELETE",
+                  "CREATE"
+                ],
+                "description": "The SQL keyword to define the type of operation."
+              },
+              "table_name": {
+                "type": "string",
+                "description": "The name of the database table to operate on."
+              },
+              "columns": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "The column names involved in the SQL operation. If not specified use '*' to represent all columns."
+              },
+              "insert_values": {
+                "type": "array",
+                "description": "Values of an INSERT statement.",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "update_values": {
+                "type": "array",
+                "description": "Values of an UPDATE statement corresponding to columns to set.",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "conditions": {
+                "type": "array",
+                "description": "Conditions for the SQL operation, formatted as a SQL WHERE clause. Put them in the format of ['cond1 > val1', 'cond2 = val2', 'cond3<val3'] and etc.",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "required": [
+              "sql_keyword",
+              "table_name"
+            ]
+          }
+        }
+      ],
+      "ground_truth": [
+        {
+          "sql.execute": {
+            "sql_keyword": [
+              "CREATE"
+            ],
+            "table_name": [
+              "Employee"
+            ],
+            "columns": [
+              [
+                "EmployeeID",
+                "FirstName",
+                "LastName",
+                "Email",
+                "Phone"
+              ]
+            ]
+          }
+        }
+      ],
+      "error_type": "value_error:list/tuple",
+      "error_detail": [
+        "Invalid value for parameter 'columns': ['EmployeeID INT PRIMARY KEY', 'FirstName VARCHAR(50)', 'LastName VARCHAR(50)', 'Email VARCHAR(100)', 'Phone VARCHAR(20)']. Expected one of [['EmployeeID', 'FirstName', 'LastName', 'Email', 'Phone']]."
+      ],
+      "model_wrong_output": [
+        {
+          "sql.execute": {
+            "sql_keyword": "CREATE",
+            "table_name": "Employee",
+            "columns": [
+              "EmployeeID INT PRIMARY KEY",
+              "FirstName VARCHAR(50)",
+              "LastName VARCHAR(50)",
+              "Email VARCHAR(100)",
+              "Phone VARCHAR(20)"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "live_multiple_982-215-6",
+      "category": "live_multiple",
+      "question": [
+        [
+          {
+            "role": "user",
+            "content": "Help find a service provider Cleaning and additional ironing services, Bangkok, March 20, 2024, available space at 6:00 p.m."
+          }
+        ]
+      ],
+      "function": [
+        {
+          "name": "get_service_providers",
+          "description": "Retrieve a list of service providers based on the given filters.",
+          "parameters": {
+            "type": "dict",
+            "required": [
+              "province_id"
+            ],
+            "properties": {
+              "avg_rating": {
+                "type": "float",
+                "description": "The average review rating score, with a higher score indicating better reviews. A default value of 'null' represents no rating data available.",
+                "default": null
+              },
+              "province_id": {
+                "type": "integer",
+                "description": "The unique identifier of the province, such as 1 for Bangkok, 2 for Chiang Mai, and 3 for Phuket."
+              },
+              "district_name": {
+                "type": "string",
+                "description": "The name of the district. For example, 'Chatuchak District', 'Bang Sue District', or 'Phaya Thai District'. A default value of 'null' represents no specific district.",
+                "default": null
+              },
+              "start_available_date": {
+                "type": "string",
+                "description": "The start date and time of the availability period for the service provider, in the format 'YYYY-MM-DD HH:mm:ss'. A default value of 'null' represents an open start date.",
+                "default": null
+              },
+              "end_available_date": {
+                "type": "string",
+                "description": "The end date and time of the availability period for the service provider, in the format 'YYYY-MM-DD HH:mm:ss'. A default value of 'null' represents an open end date.",
+                "default": null
+              },
+              "min_age": {
+                "type": "integer",
+                "description": "The minimum age requirement for the service provider. A default value of 'null' indicates no minimum age requirement.",
+                "default": null
+              },
+              "max_age": {
+                "type": "integer",
+                "description": "The maximum age limit for the service provider. A default value of 'null' indicates no maximum age limit.",
+                "default": null
+              },
+              "has_quality_problem": {
+                "type": "boolean",
+                "description": "Flag indicating whether the service provider has a record of quality problems. 'false' means no record; 'true' indicates quality issues have been recorded.",
+                "default": false
+              },
+              "has_late_check_in": {
+                "type": "boolean",
+                "description": "Flag indicating whether the service provider has a record of late check-ins. 'false' means no record; 'true' indicates there have been late check-ins.",
+                "default": false
+              },
+              "is_excellent": {
+                "type": "boolean",
+                "description": "Flag indicating whether the service provider has been marked as excellent. 'false' means not marked as excellent; 'true' means they are recognized as excellent.",
+                "default": false
+              },
+              "is_package": {
+                "type": "boolean",
+                "description": "Flag indicating if the work is offered as a package deal. 'false' means it is not a package; 'true' means it is a package.",
+                "default": false
+              },
+              "is_subscription": {
+                "type": "boolean",
+                "description": "Flag indicating if the work is subscription-based. 'false' means not subscription-based; 'true' means it is offered on a subscription basis.",
+                "default": false
+              },
+              "service_id": {
+                "type": "integer",
+                "description": "The unique identifier representing the type of service offered. For instance, 1 for cleaning service, 3 for massage, 24 for disinfectant cleaning.",
+                "default": null
+              },
+              "extra_service_id": {
+                "type": "integer",
+                "description": "The unique identifier for an additional service offered. For example, 2 for ironing service.",
+                "default": null
+              },
+              "available_for_pet": {
+                "type": "boolean",
+                "description": "Flag indicating whether the service provider is available for households with pets. 'false' means not available for pets; 'true' means they are.",
+                "default": false
+              },
+              "professional_group_id": {
+                "type": "integer",
+                "description": "The unique identifier of the professional group the service provider belongs to. For example, 1 for Group A, 2 for Group B.",
+                "default": null
+              },
+              "job_qty": {
+                "type": "integer",
+                "description": "The number of jobs the service provider has completed. A default value of 'null' indicates no job history available.",
+                "default": null
+              },
+              "is_cleaning_condo": {
+                "type": "boolean",
+                "description": "Flag indicating whether the service provider offers condo cleaning services. 'false' means they do not offer such services; 'true' means they do.",
+                "default": false
+              },
+              "is_cleaning_home": {
+                "type": "boolean",
+                "description": "Flag indicating whether the service provider offers home cleaning services. 'false' means they do not offer such services; 'true' means they do.",
+                "default": false
+              },
+              "is_cleaning_office": {
+                "type": "boolean",
+                "description": "Flag indicating whether the service provider offers office cleaning services. 'false' means they do not offer such services; 'true' means they do.",
+                "default": false
+              }
+            }
+          }
+        },
+        {
+          "name": "view_service_provider_profile",
+          "description": "Retrieve the detailed profile information of a specified service provider.",
+          "parameters": {
+            "type": "dict",
+            "required": [
+              "professional_id"
+            ],
+            "properties": {
+              "professional_id": {
+                "type": "integer",
+                "description": "The unique identifier of the service provider whose profile is to be viewed."
+              }
+            }
+          }
+        }
+      ],
+      "ground_truth": [
+        {
+          "get_service_providers": {
+            "avg_rating": [
+              "",
+              null
+            ],
+            "province_id": [
+              1
+            ],
+            "district_name": [
+              "",
+              null
+            ],
+            "start_available_date": [
+              "2024-03-20 18:00:00"
+            ],
+            "end_available_date": [
+              "",
+              null
+            ],
+            "min_age": [
+              "",
+              null
+            ],
+            "max_age": [
+              "",
+              null
+            ],
+            "has_quality_problem": [
+              "",
+              false
+            ],
+            "has_late_check_in": [
+              "",
+              false
+            ],
+            "is_excellent": [
+              "",
+              false
+            ],
+            "is_package": [
+              "",
+              false
+            ],
+            "is_subscription": [
+              "",
+              false
+            ],
+            "service_id": [
+              1
+            ],
+            "extra_service_id": [
+              2
+            ],
+            "available_for_pet": [
+              "",
+              false
+            ],
+            "professional_group_id": [
+              "",
+              null
+            ],
+            "job_qty": [
+              "",
+              null
+            ],
+            "is_cleaning_condo": [
+              "",
+              false
+            ],
+            "is_cleaning_home": [
+              "",
+              false
+            ],
+            "is_cleaning_office": [
+              "",
+              false
+            ]
+          }
+        }
+      ],
+      "error_type": "value_error:others",
+      "error_detail": [
+        "Invalid value for parameter 'end_available_date': '2024-03-20 18:00:00'. Expected one of ['', None]."
+      ],
+      "model_wrong_output": [
+        {
+          "get_service_providers": {
+            "province_id": 1,
+            "service_id": 1,
+            "extra_service_id": 2,
+            "start_available_date": "2024-03-20 18:00:00",
+            "end_available_date": "2024-03-20 18:00:00"
+          }
+        }
+      ]
+    },
+    {
+      "id": "live_multiple_458-145-9",
+      "category": "live_multiple",
+      "question": [
+        [
+          {
+            "role": "user",
+            "content": "I'm planning to visit Paris, and I'd like to find attractions that are suitable for children and have no entry fee."
+          }
+        ]
+      ],
+      "function": [
+        {
+          "name": "Flights_4_SearchOnewayFlight",
+          "description": "Search for one-way flights from an origin to a destination on a specific date, with options for seating class and preferred airlines.",
+          "parameters": {
+            "type": "dict",
+            "required": [
+              "origin_airport",
+              "destination_airport",
+              "departure_date"
+            ],
+            "properties": {
+              "origin_airport": {
+                "type": "string",
+                "description": "The IATA code or the name of the airport or city to depart from."
+              },
+              "destination_airport": {
+                "type": "string",
+                "description": "The IATA code or the name of the airport or city to arrive at."
+              },
+              "departure_date": {
+                "type": "string",
+                "description": "The start date of the trip in the format of 'YYYY-MM-DD'."
+              },
+              "seating_class": {
+                "type": "string",
+                "description": "The cabin seat class for the flight.",
+                "enum": [
+                  "Economy",
+                  "Premium Economy",
+                  "Business"
+                ],
+                "default": "Economy"
+              },
+              "number_of_tickets": {
+                "type": "integer",
+                "description": "The number of flight tickets required for the trip.",
+                "default": 1
+              },
+              "airlines": {
+                "type": "string",
+                "description": "Preferred airline for the flight. Use 'dontcare' for no preference.",
+                "enum": [
+                  "United Airlines",
+                  "American Airlines",
+                  "Delta Airlines",
+                  "Southwest Airlines",
+                  "Alaska Airlines",
+                  "British Airways",
+                  "Air Canada",
+                  "Air France",
+                  "South African Airways",
+                  "LOT Polish Airlines",
+                  "LATAM Brasil",
+                  "dontcare"
+                ],
+                "default": "dontcare"
+              }
+            }
+          }
+        },
+        {
+          "name": "Flights_4_SearchRoundtripFlights",
+          "description": "Search for roundtrip flights based on origin, destination, dates, seating class, and other preferences.",
+          "parameters": {
+            "type": "dict",
+            "required": [
+              "origin_airport",
+              "destination_airport"
+            ],
+            "properties": {
+              "origin_airport": {
+                "type": "string",
+                "description": "The IATA airport code or name of the city to depart from, such as 'JFK' for John F. Kennedy International Airport."
+              },
+              "destination_airport": {
+                "type": "string",
+                "description": "The IATA airport code or name of the city to arrive at, such as 'LAX' for Los Angeles International Airport."
+              },
+              "departure_date": {
+                "type": "string",
+                "description": "The departure date for the trip in the format 'YYYY-MM-DD'. If no date is specified, the default is to search for flights departing today.",
+                "default": null
+              },
+              "return_date": {
+                "type": "string",
+                "description": "The return date for the trip in the format 'YYYY-MM-DD'. If no date is specified, the default is to search for flights returning seven days from today.",
+                "default": null
+              },
+              "seating_class": {
+                "type": "string",
+                "description": "The class of the cabin seat for the flight.",
+                "enum": [
+                  "Economy",
+                  "Premium Economy",
+                  "Business"
+                ],
+                "default": "Economy"
+              },
+              "number_of_tickets": {
+                "type": "integer",
+                "description": "The number of flight tickets required for the trip.",
+                "default": 1
+              },
+              "airlines": {
+                "type": "string",
+                "description": "Preferred airline for the flight. If no preference, 'dontcare' can be specified.",
+                "enum": [
+                  "United Airlines",
+                  "American Airlines",
+                  "Delta Airlines",
+                  "Southwest Airlines",
+                  "Alaska Airlines",
+                  "British Airways",
+                  "Air Canada",
+                  "Air France",
+                  "South African Airways",
+                  "LOT Polish Airlines",
+                  "LATAM Brasil",
+                  "dontcare"
+                ],
+                "default": "dontcare"
+              }
+            }
+          }
+        },
+        {
+          "name": "Hotels_2_BookHouse",
+          "description": "Book the selected house for given dates and the specified number of adults.",
+          "parameters": {
+            "type": "dict",
+            "required": [
+              "where_to",
+              "number_of_adults",
+              "check_in_date",
+              "check_out_date"
+            ],
+            "properties": {
+              "where_to": {
+                "type": "string",
+                "description": "The location of the house in the format of 'City, State', such as 'Berkeley, CA' or 'New York, NY'."
+              },
+              "number_of_adults": {
+                "type": "integer",
+                "description": "The number of adults included in the reservation."
+              },
+              "check_in_date": {
+                "type": "string",
+                "description": "The start date for the reservation, in the format 'YYYY-MM-DD'."
+              },
+              "check_out_date": {
+                "type": "string",
+                "description": "The end date for the reservation, in the format 'YYYY-MM-DD'."
+              }
+            }
+          }
+        },
+        {
+          "name": "Hotels_2_SearchHouse",
+          "description": "Search for available houses at a specified location, optionally filtering by amenities such as laundry service and by the number of adults. Results can be sorted by rating.",
+          "parameters": {
+            "type": "dict",
+            "required": [
+              "where_to"
+            ],
+            "properties": {
+              "where_to": {
+                "type": "string",
+                "description": "The location of the house to search for, in the format of 'City, State' or 'City, Country'."
+              },
+              "has_laundry_service": {
+                "type": "string",
+                "description": "Indicates if the house must have laundry service available.",
+                "enum": [
+                  "True",
+                  "False",
+                  "dontcare"
+                ],
+                "default": "dontcare"
+              },
+              "number_of_adults": {
+                "type": "integer",
+                "description": "The number of adults that the house needs to accommodate.",
+                "default": 1
+              },
+              "rating": {
+                "type": "string",
+                "description": "The minimum review rating (1-5 stars) that the house must have. Use 'dontcare' for no preference.",
+                "enum": [
+                  "1",
+                  "2",
+                  "3",
+                  "4",
+                  "5",
+                  "dontcare"
+                ],
+                "default": "dontcare"
+              }
+            }
+          }
+        },
+        {
+          "name": "Travel_1_FindAttractions",
+          "description": "Retrieves a list of attractions within a specified city, filtered by entry fee, category, and suitability for children.",
+          "parameters": {
+            "type": "dict",
+            "required": [
+              "location"
+            ],
+            "properties": {
+              "location": {
+                "type": "string",
+                "description": "The name of the city or town where attractions are being searched for, in the format of 'City, State' or 'City, Country'; for example, 'Paris, France' or 'New York, NY'."
+              },
+              "free_entry": {
+                "type": "string",
+                "description": "A flag indicating if only attractions with no entry fee should be listed. Use 'True' for free attractions, 'False' for paid, and 'dontcare' for no preference.",
+                "enum": [
+                  "True",
+                  "False",
+                  "dontcare"
+                ],
+                "default": "dontcare"
+              },
+              "category": {
+                "type": "string",
+                "description": "The category of attractions to filter by, such as 'Museum' or 'Park'. The 'dontcare' option includes all categories.",
+                "enum": [
+                  "Place of Worship",
+                  "Theme Park",
+                  "Museum",
+                  "Historical Landmark",
+                  "Park",
+                  "Tourist Attraction",
+                  "Sports Venue",
+                  "Shopping Area",
+                  "Performing Arts Venue",
+                  "Nature Preserve",
+                  "dontcare"
+                ],
+                "default": "dontcare"
+              },
+              "good_for_kids": {
+                "type": "string",
+                "description": "Indicates whether to filter attractions based on their suitability for children. Options are 'True' for child-friendly attractions, 'False' for attractions not suitable for children, and 'dontcare' for no preference.",
+                "enum": [
+                  "True",
+                  "False",
+                  "dontcare"
+                ],
+                "default": "dontcare"
+              }
+            }
+          }
+        }
+      ],
+      "ground_truth": [
+        {
+          "Travel_1_FindAttractions": {
+            "location": [
+              "Paris, France"
+            ],
+            "free_entry": [
+              "True"
+            ],
+            "category": [
+              "",
+              "dontcare"
+            ],
+            "good_for_kids": [
+              "True"
+            ]
+          }
+        }
+      ],
+      "error_type": "type_error:simple",
+      "error_detail": [
+        "Incorrect type for parameter 'free_entry'. Expected type string, got bool. Parameter value: True."
+      ],
+      "model_wrong_output": [
+        {
+          "Travel_1_FindAttractions": {
+            "location": "Paris, France",
+            "free_entry": true,
+            "good_for_kids": true
+          }
+        }
+      ]
+    }
+  ]
+}

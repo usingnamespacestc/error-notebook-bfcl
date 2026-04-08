@@ -1,0 +1,1988 @@
+[
+  {
+    "id": "parallel_multiple_87",
+    "category": "parallel_multiple",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "\"A car is initially at rest and then starts moving with a constant acceleration of 3 m/s^2. After 5 seconds, what is its final velocity? Now, imagine a wave with a frequency of 50 Hz and a wavelength of 3 meters. What is the velocity of this wave? Going back to the car, if it continues to move with the same acceleration for another 7 seconds, what is the total distance it has traveled from the start?\""
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "kinematics.distance",
+        "description": "Find the distance traveled by an object moving under constant acceleration.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "initial_velocity": {
+              "type": "float",
+              "description": "The initial velocity of the object in m/s."
+            },
+            "time": {
+              "type": "float",
+              "description": "The time in seconds the object has been moving."
+            },
+            "acceleration": {
+              "type": "float",
+              "description": "The acceleration of the object in m/s^2. Default value is -9.81 (Earth's gravity)"
+            }
+          },
+          "required": [
+            "initial_velocity",
+            "time"
+          ]
+        }
+      },
+      {
+        "name": "kinematics.final_velocity",
+        "description": "Find the final velocity of an object moving under constant acceleration.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "initial_velocity": {
+              "type": "float",
+              "description": "The initial velocity of the object in m/s."
+            },
+            "time": {
+              "type": "float",
+              "description": "The time in seconds the object has been moving."
+            },
+            "acceleration": {
+              "type": "float",
+              "description": "The acceleration of the object in m/s^2. Default value is -9.81 (Earth's gravity)"
+            }
+          },
+          "required": [
+            "initial_velocity",
+            "time"
+          ]
+        }
+      },
+      {
+        "name": "physics.wave_velocity",
+        "description": "Calculate the velocity of a wave based on its frequency and wavelength.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "frequency": {
+              "type": "float",
+              "description": "The frequency of the wave in Hz."
+            },
+            "wavelength": {
+              "type": "float",
+              "description": "The wavelength of the wave in m."
+            }
+          },
+          "required": [
+            "frequency",
+            "wavelength"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "live_multiple_798-175-4",
+    "category": "live_multiple",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "What will the weather be on the 10th of March 2023 in Long Beach CA."
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "Homes_2_FindHomeByArea",
+        "description": "Search for a property to rent or buy in a specified city, filtering by number of bedrooms, bathrooms, garage availability, and in-unit laundry facilities.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "area",
+            "intent",
+            "number_of_beds",
+            "number_of_baths"
+          ],
+          "properties": {
+            "area": {
+              "type": "string",
+              "description": "The city where the property is located, in the format of 'City, State' (e.g., 'San Francisco, CA')."
+            },
+            "intent": {
+              "type": "string",
+              "description": "The intent for the property search, indicating whether the user wants to rent or buy.",
+              "enum": [
+                "rent",
+                "buy"
+              ]
+            },
+            "number_of_beds": {
+              "type": "integer",
+              "description": "The number of bedrooms desired in the property."
+            },
+            "number_of_baths": {
+              "type": "integer",
+              "description": "The number of bathrooms desired in the property."
+            },
+            "has_garage": {
+              "type": "string",
+              "description": "The preference for a garage with the property, with 'dontcare' indicating no preference.",
+              "enum": [
+                "True",
+                "False",
+                "dontcare"
+              ],
+              "default": "dontcare"
+            },
+            "in_unit_laundry": {
+              "type": "string",
+              "description": "The preference for in-unit laundry facilities, with 'dontcare' indicating no preference.",
+              "enum": [
+                "True",
+                "False",
+                "dontcare"
+              ],
+              "default": "dontcare"
+            }
+          }
+        }
+      },
+      {
+        "name": "Homes_2_ScheduleVisit",
+        "description": "Schedule a visit to a property on a specific date. This function helps users to set an appointment to explore the property and envision their future home.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "property_name",
+            "visit_date"
+          ],
+          "properties": {
+            "property_name": {
+              "type": "string",
+              "description": "The official name of the property or apartment complex to be visited."
+            },
+            "visit_date": {
+              "type": "string",
+              "description": "The desired date for the property visit, in the format of 'YYYY-MM-DD', such as '2023-04-15'."
+            },
+            "visitor_count": {
+              "type": "integer",
+              "description": "The number of people that will be attending the visit.",
+              "default": 1
+            },
+            "accessibility_requirements": {
+              "type": "boolean",
+              "description": "Indicates whether the visitor requires any special accessibility accommodations.",
+              "default": false
+            }
+          }
+        }
+      },
+      {
+        "name": "RentalCars_3_GetCarsAvailable",
+        "description": "Discover cars available for rent in a specified location and time period. This function allows users to search for rental cars based on the city, desired rental period, and car type preferences.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "city",
+            "start_date",
+            "pickup_time",
+            "end_date"
+          ],
+          "properties": {
+            "city": {
+              "type": "string",
+              "description": "City where the rental car is required, in the format of 'City, State', such as 'Los Angeles, CA'."
+            },
+            "start_date": {
+              "type": "string",
+              "description": "The start date for the car rental in the format 'YYYY-MM-DD', such as '2023-06-01'."
+            },
+            "pickup_time": {
+              "type": "string",
+              "description": "The time of day when the car will be picked up, in 24-hour format 'HH:MM', such as '15:00'."
+            },
+            "end_date": {
+              "type": "string",
+              "description": "The end date for the car rental in the format 'YYYY-MM-DD', such as '2023-06-07'."
+            },
+            "car_type": {
+              "type": "string",
+              "description": "Preferred type of car for the rental.",
+              "enum": [
+                "Hatchback",
+                "Sedan",
+                "SUV",
+                "dontcare"
+              ],
+              "default": "dontcare"
+            }
+          }
+        }
+      },
+      {
+        "name": "RentalCars_3_ReserveCar",
+        "description": "Make a rental car reservation. This includes selecting a car type, specifying pick-up and return dates and times, and choosing whether to add insurance.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "pickup_location",
+            "start_date",
+            "pickup_time",
+            "end_date",
+            "car_type",
+            "add_insurance"
+          ],
+          "properties": {
+            "pickup_location": {
+              "type": "string",
+              "description": "The location where the car will be picked up, in the format of 'City, State', such as 'Berkeley, CA' or 'New York, NY'."
+            },
+            "start_date": {
+              "type": "string",
+              "description": "The start date of the car rental period, in the format 'YYYY-MM-DD'."
+            },
+            "pickup_time": {
+              "type": "string",
+              "description": "The pick-up time on the start date, in 24-hour format 'HH:MM'."
+            },
+            "end_date": {
+              "type": "string",
+              "description": "The end date of the car rental period, in the format 'YYYY-MM-DD'."
+            },
+            "car_type": {
+              "type": "string",
+              "description": "The type of car to reserve.",
+              "enum": [
+                "Hatchback",
+                "Sedan",
+                "SUV"
+              ]
+            },
+            "add_insurance": {
+              "type": "boolean",
+              "description": "Indicates whether to purchase additional insurance coverage for the rental period."
+            }
+          }
+        }
+      },
+      {
+        "name": "Weather_1_GetWeather",
+        "description": "Retrieves the current or historical weather conditions for a specified city and date.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "city"
+          ],
+          "properties": {
+            "city": {
+              "type": "string",
+              "description": "The name of the city for which to retrieve weather data, in the format of 'City, State' or 'City, Country' if the city does not locate in the United States. Examples: 'San Francisco, CA' or 'Paris, FR'."
+            },
+            "date": {
+              "type": "string",
+              "description": "The specific date for the weather query, in the format 'YYYY-MM-DD'. If omitted, defaults to the current date.",
+              "default": "2019-03-01"
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "java_94",
+    "category": "java",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "Can I determine if the symbol 'getVersion' is readable in the native function interface library associated with the current object?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "NFILibrary.isMemberReadable",
+        "description": "Checks if the specified symbol is readable in the native function interface library associated with the current object.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "symbol": {
+              "type": "String",
+              "description": "The symbol to check for readability."
+            },
+            "recursive": {
+              "type": "any",
+              "description": "The InteropLibrary instance used for recursive checks (automatically provided by the runtime). Default null"
+            }
+          },
+          "required": [
+            "symbol"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "simple_108",
+    "category": "simple",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "Run a linear regression model with predictor variables 'Age', 'Income' and 'Education' and a target variable 'Purchase_Amount'. Also apply standardization."
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "run_linear_regression",
+        "description": "Build a linear regression model using given predictor variables and a target variable.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "predictors": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Array containing the names of predictor variables."
+            },
+            "target": {
+              "type": "string",
+              "description": "The name of target variable."
+            },
+            "standardize": {
+              "type": "boolean",
+              "description": "Option to apply standardization on the predictors. Defaults to False."
+            }
+          },
+          "required": [
+            "predictors",
+            "target"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "live_multiple_653-161-21",
+    "category": "live_multiple",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "Find me some songs from the album 'Halcyon' released in the year 2012?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "Alarm_1_GetAlarms",
+        "description": "Retrieve a list of alarms that the user has configured on the device, including details such as time, label, and status.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "user_id": {
+              "type": "string",
+              "description": "The unique identifier of the user whose alarms are to be retrieved."
+            },
+            "include_disabled": {
+              "type": "boolean",
+              "description": "Flag to include disabled alarms in the list.",
+              "default": false
+            },
+            "date": {
+              "type": "string",
+              "description": "Filter alarms by the set date, in the format of 'YYYY-MM-DD'. If not provided, defaults to current date.",
+              "default": null
+            }
+          },
+          "required": [
+            "user_id"
+          ]
+        }
+      },
+      {
+        "name": "Alarm_1_AddAlarm",
+        "description": "Set a new alarm with a specified time and optional custom name.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "new_alarm_time"
+          ],
+          "properties": {
+            "new_alarm_time": {
+              "type": "string",
+              "description": "The time to set for the new alarm, in 24-hour format 'HH:MM'."
+            },
+            "new_alarm_name": {
+              "type": "string",
+              "description": "The custom name to give to the new alarm.",
+              "default": "New alarm"
+            }
+          }
+        }
+      },
+      {
+        "name": "Media_3_FindMovies",
+        "description": "Explore and discover movies online based on user-defined preferences such as genre and starring actors.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "genre"
+          ],
+          "properties": {
+            "genre": {
+              "type": "string",
+              "description": "The genre category of the movie.",
+              "enum": [
+                "World",
+                "Fantasy",
+                "Offbeat",
+                "Mystery",
+                "Musical",
+                "Thriller",
+                "Comedy",
+                "Horror",
+                "Animation",
+                "Sci-fi",
+                "War",
+                "Drama",
+                "Family",
+                "Action"
+              ]
+            },
+            "starring": {
+              "type": "string",
+              "description": "The name of a celebrity starring in the movie. Specify 'Any' if no preference.",
+              "default": "Any"
+            }
+          }
+        }
+      },
+      {
+        "name": "Media_3_PlayMovie",
+        "description": "Stream the selected movie online with the option to choose subtitles in various languages.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "title"
+          ],
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "The exact title of the movie to be streamed."
+            },
+            "subtitle_language": {
+              "type": "string",
+              "description": "The preferred language for the movie subtitles.",
+              "enum": [
+                "English",
+                "Spanish",
+                "Hindi",
+                "French"
+              ],
+              "default": "English"
+            }
+          }
+        }
+      },
+      {
+        "name": "Music_3_PlayMedia",
+        "description": "Plays the specified track on a designated media player device.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "track"
+          ],
+          "properties": {
+            "track": {
+              "type": "string",
+              "description": "The title of the song to be played."
+            },
+            "artist": {
+              "type": "string",
+              "description": "The name of the artist performing the song. If unspecified, any artist's version of the song may be played.",
+              "default": "any"
+            },
+            "device": {
+              "type": "string",
+              "description": "The name of the media player device where the song will be played, such as 'Living room' or 'Kitchen'.",
+              "enum": [
+                "Living room",
+                "Kitchen",
+                "Patio"
+              ],
+              "default": "Living room"
+            },
+            "album": {
+              "type": "string",
+              "description": "The name of the album that the song belongs to. If unspecified, songs from any album may be played.",
+              "default": "any"
+            }
+          }
+        }
+      },
+      {
+        "name": "Music_3_LookupMusic",
+        "description": "Retrieves a list of songs that match the user's specified preferences such as artist, album, genre, and release year.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "artist": {
+              "type": "string",
+              "description": "The first and last name of the artist or the name of the band. Use 'dontcare' if artist preference is not specified.",
+              "default": "dontcare"
+            },
+            "album": {
+              "type": "string",
+              "description": "The name of the album. Use 'dontcare' if album preference is not specified.",
+              "default": "dontcare"
+            },
+            "genre": {
+              "type": "string",
+              "description": "The genre of music. Select from a predefined list of genres or use 'dontcare' for no preference.",
+              "enum": [
+                "Reggae",
+                "Holiday",
+                "Electropop",
+                "Pop",
+                "Asia",
+                "House",
+                "Electronica",
+                "Funk",
+                "Rock",
+                "Metal",
+                "Dubstep",
+                "Country",
+                "dontcare"
+              ],
+              "default": "dontcare"
+            },
+            "year": {
+              "type": "string",
+              "description": "The year the song was released. Use an integer value or 'dontcare' for no specific year preference.",
+              "enum": [
+                "2010",
+                "2011",
+                "2012",
+                "2013",
+                "2014",
+                "2015",
+                "2016",
+                "2017",
+                "2018",
+                "2019",
+                "2020",
+                "2021",
+                "2022",
+                "2023",
+                "2024",
+                "dontcare"
+              ],
+              "default": "dontcare"
+            }
+          },
+          "required": []
+        }
+      }
+    ]
+  },
+  {
+    "id": "live_multiple_51-21-0",
+    "category": "live_multiple",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "status of my order? my order ID is #123, and the product I ordered is a pair of sneakers."
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "inventory_management",
+        "description": "Manage inventory-related queries, including checking product availability, stock updates, size availability, color availability, and bulk availability.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "product_id"
+          ],
+          "properties": {
+            "product_id": {
+              "type": "string",
+              "description": "Unique identifier of the product."
+            },
+            "sizes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "List of sizes to check for stock updates, such as ['S', 'M', 'L'].",
+              "default": []
+            },
+            "color": {
+              "type": "string",
+              "description": "Specific color to check for stock updates. Example values could be 'Red', 'Blue', or 'Green'.",
+              "default": null
+            },
+            "quantity": {
+              "type": "integer",
+              "description": "Quantity of the product for bulk availability checks. Indicates how many items are being queried.",
+              "default": 1
+            }
+          }
+        }
+      },
+      {
+        "name": "product_search",
+        "description": "Search for products by applying filters such as category, color, and size. Returns a list of products that match the criteria.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "category"
+          ],
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "The category of the product, which is a mandatory filter in the search. For example, 'electronics', 'clothing', or 'books'.",
+              "enum": [
+                "electronics",
+                "clothing",
+                "books",
+                "home",
+                "toys"
+              ]
+            },
+            "color": {
+              "type": "string",
+              "description": "The color of the product. This is an optional filter to narrow down the search results. For example, 'red', 'blue', or 'green'.",
+              "default": null
+            },
+            "size": {
+              "type": "string",
+              "description": "The size of the product. This is an optional filter that can be used to find products of a specific size. For example, 'S', 'M', 'L', 'XL'.",
+              "default": null
+            }
+          }
+        }
+      },
+      {
+        "name": "order_status_check",
+        "description": "Check the current status of an order by providing the order ID and the name of the product ordered.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "order_id",
+            "product"
+          ],
+          "properties": {
+            "order_id": {
+              "type": "string",
+              "description": "The unique identifier of the order."
+            },
+            "product": {
+              "type": "string",
+              "description": "The name of the product that was ordered."
+            }
+          }
+        }
+      },
+      {
+        "name": "get_product_details",
+        "description": "Retrieve detailed information about a specific product, including color and size availability.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "product_id"
+          ],
+          "properties": {
+            "product_id": {
+              "type": "string",
+              "description": "The unique identifier of the product for which details are to be retrieved."
+            },
+            "color": {
+              "type": "string",
+              "description": "The color variation of the product. Example values: 'Red', 'Blue', 'Green'.",
+              "default": "All colors"
+            },
+            "size": {
+              "type": "string",
+              "description": "The size variation of the product. Common sizes include 'S', 'M', 'L', 'XL'.",
+              "default": "All sizes"
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "live_multiple_370-134-15",
+    "category": "live_multiple",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "I'm interested in fantasy movies with Danny John-Jules in the cast and directed by Jim Henson. Could you search for some options?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "Movies_3_FindMovies",
+        "description": "Search for movies based on specific criteria such as director, genre, and cast.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "directed_by": {
+              "type": "string",
+              "description": "The director of the movie. Use 'dontcare' if the director is not a search criterion.",
+              "default": "dontcare"
+            },
+            "genre": {
+              "type": "string",
+              "description": "The genre of the movie. Use 'dontcare' if the genre is not a search criterion.",
+              "enum": [
+                "Offbeat",
+                "Fantasy",
+                "World",
+                "Mystery",
+                "Thriller",
+                "Comedy",
+                "Comedy-drama",
+                "Horror",
+                "Animation",
+                "Sci-fi",
+                "Cult",
+                "Drama",
+                "Anime",
+                "Family",
+                "Action",
+                "dontcare"
+              ],
+              "default": "dontcare"
+            },
+            "cast": {
+              "type": "string",
+              "description": "The lead actor in the movie. Use 'dontcare' if the cast is not a search criterion.",
+              "default": "dontcare"
+            }
+          },
+          "required": []
+        }
+      },
+      {
+        "name": "Music_3_PlayMedia",
+        "description": "Plays the selected music track on the specified device.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "track"
+          ],
+          "properties": {
+            "track": {
+              "type": "string",
+              "description": "The title of the song to be played."
+            },
+            "artist": {
+              "type": "string",
+              "description": "The name of the artist performing the song.",
+              "default": "Any Artist"
+            },
+            "device": {
+              "type": "string",
+              "description": "The device where the music will be played. Choose from a list of available players.",
+              "enum": [
+                "Living room",
+                "Kitchen",
+                "Patio"
+              ],
+              "default": "Living room"
+            },
+            "album": {
+              "type": "string",
+              "description": "The name of the album that the song belongs to.",
+              "default": "Any Album"
+            }
+          }
+        }
+      },
+      {
+        "name": "Music_3_LookupMusic",
+        "description": "Discover songs that match your music preferences, such as artist, album, genre, and release year.",
+        "parameters": {
+          "type": "dict",
+          "required": [],
+          "properties": {
+            "artist": {
+              "type": "string",
+              "description": "The name of the performer or band. Use 'dontcare' to ignore this filter.",
+              "default": "dontcare"
+            },
+            "album": {
+              "type": "string",
+              "description": "The name of the album containing the song. Use 'dontcare' to ignore this filter.",
+              "default": "dontcare"
+            },
+            "genre": {
+              "type": "string",
+              "description": "The musical style or category of the song. Use 'dontcare' for no preference.",
+              "enum": [
+                "Reggae",
+                "Holiday",
+                "Electropop",
+                "Pop",
+                "Asia",
+                "House",
+                "Electronica",
+                "Funk",
+                "Rock",
+                "Metal",
+                "Dubstep",
+                "Country",
+                "dontcare"
+              ],
+              "default": "dontcare"
+            },
+            "year": {
+              "type": "string",
+              "description": "The year the song was released. Format: 'YYYY'. Use 'dontcare' to ignore this filter.",
+              "enum": [
+                "2010",
+                "2011",
+                "2012",
+                "2013",
+                "2014",
+                "2015",
+                "2016",
+                "2017",
+                "2018",
+                "2019",
+                "dontcare"
+              ],
+              "default": "dontcare"
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "live_multiple_630-160-10",
+    "category": "live_multiple",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "Could you initiate a request for 15500 cents from Amelia's account, and set the privacy of the transaction to public?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "Payment_1_RequestPayment",
+        "description": "Initiates a payment request to a specified receiver with an optional privacy setting.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "receiver",
+            "amount"
+          ],
+          "properties": {
+            "receiver": {
+              "type": "string",
+              "description": "The identifier for the contact or account to receive the payment request, such as an email or account number."
+            },
+            "amount": {
+              "type": "float",
+              "description": "The monetary value to be requested, specified in the currency's smallest unit (e.g., cents for USD)."
+            },
+            "private_visibility": {
+              "type": "boolean",
+              "description": "Indicates if the transaction should be private (true) or public (false).",
+              "default": false
+            }
+          }
+        }
+      },
+      {
+        "name": "Payment_1_MakePayment",
+        "description": "Initiates a payment transaction to send money to a specified receiver using a selected payment method.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "payment_method",
+            "amount",
+            "receiver"
+          ],
+          "properties": {
+            "payment_method": {
+              "type": "string",
+              "description": "The source of funds for the payment. Choose from the available options.",
+              "enum": [
+                "app balance",
+                "debit card",
+                "credit card"
+              ]
+            },
+            "amount": {
+              "type": "float",
+              "description": "The monetary value to be sent, specified in USD."
+            },
+            "receiver": {
+              "type": "string",
+              "description": "The identifier for the recipient, such as an account number or a contact name."
+            },
+            "private_visibility": {
+              "type": "boolean",
+              "description": "Determines if the transaction will be visible to others or kept private.",
+              "default": false
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "live_multiple_241-107-2",
+    "category": "live_multiple",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "search flight prices from NYC to NEw Delhi use tools, finally respond in json"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "generate_image_tool",
+        "description": "Generates an image based on the provided description and saves it with the specified file name. The image description should be detailed to ensure the resulting image matches the desired subject and surroundings; otherwise, these aspects will be chosen randomly. This function is not intended for generating images from textual data.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "desc",
+            "file_name"
+          ],
+          "properties": {
+            "desc": {
+              "type": "string",
+              "description": "A single string that provides a detailed description of the desired image. For example, 'a sunset over the mountains with a lake in the foreground'."
+            },
+            "file_name": {
+              "type": "string",
+              "description": "The name of the file to which the generated image will be saved. It should include the file extension, such as 'image.png'."
+            }
+          }
+        }
+      },
+      {
+        "name": "tts_tool",
+        "description": "Converts the provided text content to speech and saves the resulting audio to a file. This function is intended for voice narration and should be used accordingly.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "content"
+          ],
+          "properties": {
+            "content": {
+              "type": "string",
+              "description": "The text content that needs to be converted to speech."
+            },
+            "speaker": {
+              "type": "string",
+              "description": "The voice to be used for the text-to-speech conversion.",
+              "enum": [
+                "male",
+                "female",
+                "bria",
+                "alex"
+              ],
+              "default": "female"
+            },
+            "file_name": {
+              "type": "string",
+              "description": "The name of the file to save the audio output without the extension. If left empty, a default name will be generated based on the content.",
+              "default": ""
+            }
+          }
+        }
+      },
+      {
+        "name": "write_markdown_tool",
+        "description": "Writes the provided content to a Markdown (.md) file on the disk. This function should be used when there is a need to persist text data in Markdown format as a result of a user action or a process that requires saving information in a structured text file.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "content"
+          ],
+          "properties": {
+            "content": {
+              "type": "string",
+              "description": "The Markdown formatted text content to be written to the file."
+            },
+            "filename": {
+              "type": "string",
+              "description": "The name of the file to which the Markdown content will be written. If not provided, a default filename will be used.",
+              "default": "output.md"
+            }
+          }
+        }
+      },
+      {
+        "name": "write_html_tool",
+        "description": "Writes an HTML file to disk with the given content. Ensures HTML tags within the content are properly closed. This function should be used when there is a need to save HTML content to a file as part of a 'save' operation.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "content"
+          ],
+          "properties": {
+            "content": {
+              "type": "string",
+              "description": "The HTML content to be written to the file. Must contain valid HTML structure."
+            },
+            "filename": {
+              "type": "string",
+              "description": "The name of the file to which the HTML content will be written. If not provided, a default filename will be used.",
+              "default": "output.html"
+            }
+          }
+        }
+      },
+      {
+        "name": "search_web_tool",
+        "description": "Executes a search query using the DuckDuckGo search engine and returns a specified number of search results from a given source.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "query"
+          ],
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "The search term or phrase to be queried."
+            },
+            "num_results": {
+              "type": "integer",
+              "description": "The maximum number of search results to return. A positive integer.",
+              "default": 3
+            },
+            "source": {
+              "type": "string",
+              "description": "The source from which the search results should be fetched.",
+              "enum": [
+                "text",
+                "news"
+              ],
+              "default": "text"
+            }
+          }
+        }
+      },
+      {
+        "name": "get_url_content",
+        "description": "Scrapes the specified URL for textual data and returns the content as a string. This function is useful for extracting information from web pages when a URL is provided.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "url"
+          ],
+          "properties": {
+            "url": {
+              "type": "string",
+              "description": "The web address of the page to scrape. It should be a valid URL format, such as 'http://www.example.com'."
+            },
+            "timeout": {
+              "type": "integer",
+              "description": "The maximum time in seconds to wait for the server to send data before giving up, with a default value that allows for a reasonable amount of time for most web pages to load.",
+              "default": 30
+            },
+            "user_agent": {
+              "type": "string",
+              "description": "The User-Agent string to be used for the HTTP request to simulate a particular browser, which is optional. Some websites may require this for access.",
+              "default": "Mozilla/5.0"
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "simple_140",
+    "category": "simple",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "Calculate the Compound Annual Growth Rate (CAGR) for an initial investment of $2000, final value of $3000 in a period of 4 years."
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "calculate_cagr",
+        "description": "Calculate the Compound Annual Growth Rate (CAGR) given an initial investment value, a final investment value, and the number of years.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "initial_value": {
+              "type": "integer",
+              "description": "The initial investment value."
+            },
+            "final_value": {
+              "type": "integer",
+              "description": "The final investment value."
+            },
+            "period_in_years": {
+              "type": "integer",
+              "description": "The period of the investment in years."
+            }
+          },
+          "required": [
+            "initial_value",
+            "final_value",
+            "period_in_years"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "parallel_38",
+    "category": "parallel",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "What's the driving distance between New York and Washington DC, and between Los Angeles and San Francisco with optional parameter shortest route enabled?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "calc_distance",
+        "description": "Calculate the driving distance between two locations.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "start_loc": {
+              "type": "string",
+              "description": "Starting location."
+            },
+            "end_loc": {
+              "type": "string",
+              "description": "Ending location."
+            },
+            "shortest_route": {
+              "type": "boolean",
+              "default": "false",
+              "description": "If true, returns the shortest driving route."
+            }
+          },
+          "required": [
+            "start_loc",
+            "end_loc"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "live_multiple_947-197-0",
+    "category": "live_multiple",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "Set a countdown for 5 mins reminding me to text Rajh"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "set_volume",
+        "description": "Set the global volume for all audio playback. The volume level can be specified as an integer between 0 (mute) and 100 (maximum loudness).",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "volume"
+          ],
+          "properties": {
+            "volume": {
+              "type": "integer",
+              "description": "The volume level to be set. Valid values range from 0 (mute) to 100 (maximum loudness)."
+            }
+          }
+        }
+      },
+      {
+        "name": "set_alarm",
+        "description": "Set an alarm for a specific time. The time can be specified in various formats, including 'YYYY-MM-DD HH:MM:SS', 'HH:MM:SS', 'HH:MM', or with AM/PM notations. For example, '2023-06-01 09:30:00', '14:45', or '9:30 AM'.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "alarm_time": {
+              "type": "string",
+              "description": "The alarm time in a recognized format, such as 'YYYY-MM-DD HH:MM:SS' for specific date and time, 'HH:MM:SS' for time only, 'HH:MM' for hour and minutes, or 'HH:MM AM/PM' for 12-hour format."
+            },
+            "purpose": {
+              "type": "string",
+              "description": "The purpose of setting the alarm. This could be a brief reminder or a description of the event.",
+              "default": "General reminder"
+            }
+          },
+          "required": [
+            "alarm_time"
+          ]
+        }
+      },
+      {
+        "name": "set_countdown",
+        "description": "Sets a countdown timer based on the provided duration, which should be specified in either hours, minutes, or a combination of both. For example, valid inputs include '1 hour', '30 minutes', and '1 hour 30 minutes'.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "duration"
+          ],
+          "properties": {
+            "duration": {
+              "type": "string",
+              "description": "The countdown duration specified as a string in one of the following formats: 'X hour(s) Y minute(s)', 'X hour(s)', or 'Y minute(s)'. Examples: '1 hour 30 minutes', '45 minutes', '2 hours'.",
+              "enum": [
+                "1 hour",
+                "30 minutes",
+                "1 hour 30 minutes",
+                "45 minutes",
+                "2 hours"
+              ]
+            },
+            "purpose": {
+              "type": "string",
+              "description": "An optional description of the purpose for the countdown timer.",
+              "default": "General reminder"
+            }
+          }
+        }
+      },
+      {
+        "name": "play_song",
+        "description": "Play a song based on the user's search query. The function searches for the song in the music database and plays the first match.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "query"
+          ],
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "The search query for the song, which can include song title, artist, or album."
+            },
+            "volume": {
+              "type": "integer",
+              "description": "The volume level at which the song should be played, ranging from 0 to 100.",
+              "default": 75
+            },
+            "shuffle": {
+              "type": "boolean",
+              "description": "Indicates whether to shuffle the playlist after playing the requested song.",
+              "default": false
+            },
+            "repeat": {
+              "type": "string",
+              "description": "Specifies the repeat mode for the song playback.",
+              "enum": [
+                "none",
+                "one",
+                "all"
+              ],
+              "default": "none"
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "parallel_multiple_124",
+    "category": "parallel_multiple",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "\"Can you help me plan my meals for the day? I want to start with a breakfast recipe using eggs, milk, and bread, and it should not exceed 300 calories. Then, for lunch, I want to try a new restaurant that serves dishes with chicken, tomatoes, and lettuce, and the dishes should not be more than 500 calories. In the evening, I have a recipe for dinner that uses beef, but I want to replace the beef with tofu and keep the total calories under 600. Can you assist me with these?\""
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "recipe_search",
+        "description": "Searches for recipes based on a list of ingredients and a maximum caloric value.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "ingredients": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "A list of ingredients you want to use in the recipe."
+            },
+            "calories": {
+              "type": "integer",
+              "description": "The maximum number of calories for the recipe."
+            },
+            "meal": {
+              "type": "string",
+              "description": "Type of the meal for the recipe, it's optional and could be breakfast, lunch or dinner. Default is all if not specified."
+            }
+          },
+          "required": [
+            "ingredients",
+            "calories"
+          ]
+        }
+      },
+      {
+        "name": "ingredient_replace",
+        "description": "Replaces an ingredient in a recipe with a substitute, keeping the calories below a certain number.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "original_ingredient": {
+              "type": "string",
+              "description": "The ingredient in the recipe to replace."
+            },
+            "replacement_ingredient": {
+              "type": "string",
+              "description": "The substitute ingredient to replace the original one."
+            },
+            "calories": {
+              "type": "integer",
+              "description": "The maximum number of calories for the recipe after replacement."
+            }
+          },
+          "required": [
+            "original_ingredient",
+            "replacement_ingredient",
+            "calories"
+          ]
+        }
+      },
+      {
+        "name": "restaurant_search",
+        "description": "Searches for restaurants based on a list of preferred ingredients and maximum calorie count.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "ingredients": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "A list of ingredients you prefer in the restaurant's dishes."
+            },
+            "calories": {
+              "type": "integer",
+              "description": "The maximum calorie count you prefer for the restaurant's dishes."
+            },
+            "meal": {
+              "type": "string",
+              "description": "Type of the meal for the restaurant's dishes, it's optional and could be breakfast, lunch or dinner. Default is all if not specified."
+            }
+          },
+          "required": [
+            "ingredients",
+            "calories"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "live_simple_64-29-4",
+    "category": "live_simple",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "I need to remember to 'go to Goa'"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "todo",
+        "description": "Manages a todo list by allowing the user to add, delete, or mark tasks as completed.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "type",
+            "content"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "description": "The type of action to be performed on the todo list. 'add' to add a new task, 'delete' to remove an existing task, or 'complete' to mark a task as completed.",
+              "enum": [
+                "add",
+                "delete",
+                "complete"
+              ]
+            },
+            "content": {
+              "type": "string",
+              "description": "The content or description of the task for the specified action."
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "javascript_26",
+    "category": "javascript",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "Help me change the content of a div with the ID 'contentBox' and new content 'Hello World' by invoking the 'update' action?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "contentUpdater",
+        "description": "This function updates the inner content of a specified div element when the 'update' action is called.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "elementID": {
+              "type": "String",
+              "description": "The ID of the div element whose content is to be updated."
+            },
+            "newContent": {
+              "type": "String",
+              "description": "The new content that will replace the current content of the div element."
+            },
+            "action": {
+              "type": "String",
+              "description": "The action to be performed. In this case, it should be 'update' to change the content."
+            }
+          },
+          "required": [
+            "elementID",
+            "newContent",
+            "action"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "sql_32",
+    "category": "sql",
+    "question": [
+      {
+        "role": "user",
+        "content": "Can you create a new table called \"CellTypes\" in the database, with columns named \"CellID\", \"CellName\", \"Organ\", and \"Function\"?"
+      }
+    ],
+    "function": [
+      {
+        "name": "sql.execute",
+        "description": "Execute SQL queries based on user-defined parameters like SQL keyword, table name, column names, and conditions.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "sql_keyword": {
+              "type": "string",
+              "enum": [
+                "SELECT",
+                "INSERT",
+                "UPDATE",
+                "DELETE",
+                "CREATE"
+              ],
+              "description": "The SQL keyword to define the type of operation."
+            },
+            "table_name": {
+              "type": "string",
+              "description": "The name of the database table to operate on."
+            },
+            "columns": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "The column names involved in the SQL operation. If not specified use '*' to represent all columns."
+            },
+            "insert_values": {
+              "type": "array",
+              "description": "Values of an INSERT statement.",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "update_values": {
+              "type": "array",
+              "description": "Values of an UPDATE statement corresponding to columns to set.",
+              "items": {
+                "type": "string"
+              }
+            },
+            "conditions": {
+              "type": "array",
+              "description": "Conditions for the SQL operation, formatted as a SQL WHERE clause. Put them in the format of ['cond1 > val1', 'cond2 = val2', 'cond3<val3'] and etc.",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": [
+            "sql_keyword",
+            "table_name"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "simple_365",
+    "category": "simple",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "How many ounces in 2 pounds of butter?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "cooking_conversion.convert",
+        "description": "Convert cooking measurements from one unit to another.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "quantity": {
+              "type": "integer",
+              "description": "The quantity to be converted."
+            },
+            "from_unit": {
+              "type": "string",
+              "description": "The unit to convert from."
+            },
+            "to_unit": {
+              "type": "string",
+              "description": "The unit to convert to."
+            },
+            "item": {
+              "type": "string",
+              "description": "The item to be converted."
+            }
+          },
+          "required": [
+            "quantity",
+            "from_unit",
+            "to_unit",
+            "item"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "live_multiple_433-141-22",
+    "category": "live_multiple",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "Search for me movies shown in Napa.I would like to watch at Century Napa Valley and XD."
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "Movies_1_BuyMovieTickets",
+        "description": "Purchase tickets for a specific movie showing, including the number of tickets, show date and time, and location.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "movie_name",
+            "number_of_tickets",
+            "location"
+          ],
+          "properties": {
+            "movie_name": {
+              "type": "string",
+              "description": "The title of the movie for which tickets are being purchased."
+            },
+            "number_of_tickets": {
+              "type": "integer",
+              "description": "The total number of tickets to be bought."
+            },
+            "show_date": {
+              "type": "string",
+              "description": "The date on which the movie is showing, in the format 'YYYY-MM-DD'.",
+              "default": null
+            },
+            "location": {
+              "type": "string",
+              "description": "The city in which the movie theater is located, in the format of 'City, State', such as 'Los Angeles, CA'."
+            },
+            "show_time": {
+              "type": "string",
+              "description": "The start time of the movie showing, in 24-hour format 'HH:MM'.",
+              "default": "20:00"
+            },
+            "show_type": {
+              "type": "string",
+              "description": "The format of the movie showing.",
+              "enum": [
+                "regular",
+                "3d",
+                "imax"
+              ],
+              "default": "regular"
+            }
+          }
+        }
+      },
+      {
+        "name": "Movies_1_FindMovies",
+        "description": "Search for movies based on location, genre, and show type at specific theaters.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "location"
+          ],
+          "properties": {
+            "location": {
+              "type": "string",
+              "description": "The city where the theatre is located, in the format of 'City, State', such as 'Berkeley, CA' or 'New York, NY'. State names must be abbreviated"
+            },
+            "theater_name": {
+              "type": "string",
+              "description": "The name of the theatre. If unspecified, all theatres are considered.",
+              "default": "dontcare"
+            },
+            "genre": {
+              "type": "string",
+              "description": "The genre of the movie. If unspecified, all genres are considered.",
+              "enum": [
+                "World",
+                "Offbeat",
+                "Mystery",
+                "Supernatural",
+                "Horror",
+                "Animation",
+                "Sci-fi",
+                "Documentary",
+                "Drama",
+                "War",
+                "Family",
+                "Action"
+              ],
+              "default": "dontcare"
+            },
+            "show_type": {
+              "type": "string",
+              "description": "The type of movie show. If unspecified, all show types are considered.",
+              "enum": [
+                "regular",
+                "3d",
+                "imax"
+              ],
+              "default": "dontcare"
+            }
+          }
+        }
+      },
+      {
+        "name": "Movies_1_GetTimesForMovie",
+        "description": "Retrieves the show times for a specific movie at a particular theater location on a specified date.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "movie_name",
+            "location",
+            "show_date"
+          ],
+          "properties": {
+            "movie_name": {
+              "type": "string",
+              "description": "The title of the movie for which to find show times."
+            },
+            "location": {
+              "type": "string",
+              "description": "The city and state where the theater is located, in the format of 'City, State', such as 'Berkeley, CA' and 'New York, NY'."
+            },
+            "show_date": {
+              "type": "string",
+              "description": "The date of the show in the format 'YYYY-MM-DD', for example, '2023-04-15'."
+            },
+            "theater_name": {
+              "type": "string",
+              "description": "The name of the theater where the movie is showing. If not specified, any theater will be considered.",
+              "default": "Any Theater"
+            },
+            "show_type": {
+              "type": "string",
+              "description": "The format of the movie showing.",
+              "enum": [
+                "regular",
+                "3D",
+                "IMAX"
+              ],
+              "default": "regular"
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "live_multiple_418-141-7",
+    "category": "live_multiple",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "Can you help me purchase two tickets for 'Space Adventure' on 2023 April 15th at 19:30 in New York?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "Movies_1_BuyMovieTickets",
+        "description": "Purchase tickets for a specific movie showing, including the number of tickets, show date and time, and location.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "movie_name",
+            "number_of_tickets",
+            "location"
+          ],
+          "properties": {
+            "movie_name": {
+              "type": "string",
+              "description": "The title of the movie for which tickets are being purchased."
+            },
+            "number_of_tickets": {
+              "type": "integer",
+              "description": "The total number of tickets to be bought."
+            },
+            "show_date": {
+              "type": "string",
+              "description": "The date on which the movie is showing, in the format 'YYYY-MM-DD'.",
+              "default": null
+            },
+            "location": {
+              "type": "string",
+              "description": "The city in which the movie theater is located, in the format of 'City, State', such as 'Los Angeles, CA'. State names must be abbreviated"
+            },
+            "show_time": {
+              "type": "string",
+              "description": "The start time of the movie showing, in 24-hour format 'HH:MM'.",
+              "default": "20:00"
+            },
+            "show_type": {
+              "type": "string",
+              "description": "The format of the movie showing.",
+              "enum": [
+                "regular",
+                "3d",
+                "imax"
+              ],
+              "default": "regular"
+            }
+          }
+        }
+      },
+      {
+        "name": "Movies_1_FindMovies",
+        "description": "Search for movies based on location, genre, and show type at specific theaters.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "location"
+          ],
+          "properties": {
+            "location": {
+              "type": "string",
+              "description": "The city where the theatre is located, in the format of 'City, State', such as 'Berkeley, CA' or 'New York, NY'."
+            },
+            "theater_name": {
+              "type": "string",
+              "description": "The name of the theatre. If unspecified, all theatres are considered.",
+              "default": "dontcare"
+            },
+            "genre": {
+              "type": "string",
+              "description": "The genre of the movie. If unspecified, all genres are considered.",
+              "enum": [
+                "World",
+                "Offbeat",
+                "Mystery",
+                "Supernatural",
+                "Horror",
+                "Animation",
+                "Sci-fi",
+                "Documentary",
+                "Drama",
+                "War",
+                "Family",
+                "Action"
+              ],
+              "default": "dontcare"
+            },
+            "show_type": {
+              "type": "string",
+              "description": "The type of movie show. If unspecified, all show types are considered.",
+              "enum": [
+                "regular",
+                "3d",
+                "imax"
+              ],
+              "default": "dontcare"
+            }
+          }
+        }
+      },
+      {
+        "name": "Movies_1_GetTimesForMovie",
+        "description": "Retrieves the show times for a specific movie at a particular theater location on a specified date.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "movie_name",
+            "location",
+            "show_date"
+          ],
+          "properties": {
+            "movie_name": {
+              "type": "string",
+              "description": "The title of the movie for which to find show times."
+            },
+            "location": {
+              "type": "string",
+              "description": "The city and state where the theater is located, in the format of 'City, State', such as 'Berkeley, CA' and 'New York, NY'."
+            },
+            "show_date": {
+              "type": "string",
+              "description": "The date of the show in the format 'YYYY-MM-DD', for example, '2023-04-15'."
+            },
+            "theater_name": {
+              "type": "string",
+              "description": "The name of the theater where the movie is showing. If not specified, any theater will be considered.",
+              "default": "Any Theater"
+            },
+            "show_type": {
+              "type": "string",
+              "description": "The format of the movie showing.",
+              "enum": [
+                "regular",
+                "3D",
+                "IMAX"
+              ],
+              "default": "regular"
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": "multiple_129",
+    "category": "multiple",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "Find the compound interest for an investment of $10000 with an annual interest rate of 5% compounded monthly for 5 years."
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "lawsuits_search",
+        "description": "Search for lawsuits against a specific company within a specific time and location.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "company_name": {
+              "type": "string",
+              "description": "The name of the company."
+            },
+            "location": {
+              "type": "string",
+              "description": "The location where the lawsuit was filed."
+            },
+            "year": {
+              "type": "integer",
+              "description": "The year when the lawsuit was filed."
+            },
+            "case_type": {
+              "type": "string",
+              "description": "The type of the case. Options include: 'civil', 'criminal', 'small_claims', etc. If not specified, search for all types. Default is 'all'"
+            }
+          },
+          "required": [
+            "company_name",
+            "location",
+            "year"
+          ]
+        }
+      },
+      {
+        "name": "compound_interest",
+        "description": "Calculate compound interest for a certain time period.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "principal": {
+              "type": "integer",
+              "description": "The initial amount of money that was invested or loaned out."
+            },
+            "annual_rate": {
+              "type": "float",
+              "description": "The interest rate for a year as a percentage."
+            },
+            "compounding_freq": {
+              "type": "string",
+              "enum": [
+                "monthly",
+                "quarterly",
+                "annually"
+              ],
+              "description": "The number of times that interest is compounded per unit period."
+            },
+            "time_in_years": {
+              "type": "integer",
+              "description": "The time the money is invested for in years."
+            }
+          },
+          "required": [
+            "principal",
+            "annual_rate",
+            "compounding_freq",
+            "time_in_years"
+          ]
+        }
+      }
+    ]
+  }
+]
