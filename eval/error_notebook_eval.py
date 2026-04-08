@@ -173,6 +173,8 @@ def main():
                         help="Path to error_notebook_subset.json")
     parser.add_argument("--output", type=str, default=None,
                         help="Output path (default: results/error_notebook_responses.jsonl)")
+    parser.add_argument("--interleaved", action="store_true",
+                        help="Interleave error and correct examples (correct->error->correct->...)")
     args = parser.parse_args()
 
     # Load subset
@@ -198,11 +200,18 @@ def main():
         )
     })
 
-    # Correct examples first
-    fewshot_messages.extend(build_correct_fewshot(correct_examples))
-
-    # Then error-correction examples
-    fewshot_messages.extend(build_error_correction_fewshot(error_examples))
+    if args.interleaved and correct_examples and error_examples:
+        max_len = max(len(correct_examples), len(error_examples))
+        for i in range(max_len):
+            if i < len(correct_examples):
+                fewshot_messages.extend(build_correct_fewshot([correct_examples[i]]))
+            if i < len(error_examples):
+                fewshot_messages.extend(build_error_correction_fewshot([error_examples[i]]))
+    else:
+        # Correct examples first
+        fewshot_messages.extend(build_correct_fewshot(correct_examples))
+        # Then error-correction examples
+        fewshot_messages.extend(build_error_correction_fewshot(error_examples))
 
     print(f"Total few-shot messages: {len(fewshot_messages)}")
 

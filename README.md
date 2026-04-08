@@ -82,13 +82,15 @@ User: <实际要回答的问题>
 
 | 模型 | 准确率 | 说明 |
 |------|--------|------|
-| Claude Opus 4.6 | 87.0% | 100 条分层抽样，文本格式 |
+| Claude Opus 4.6 | 87.0% | 100 条分层抽样，**无上下文污染**标杆 |
 | Volcengine Auto + 错题本 | 79.0% | 比 zero-shot +11.0pp |
-| Gemma4 26B + 错题本 | 77.6% | 比 zero-shot +1.3pp |
+| Gemma4 26B + 错题本 | 78.6% | 比 zero-shot +2.3pp |
 | Gemma4 26B zero-shot | 76.3% | 本地 Ollama，原生工具调用 |
 | Doubao-Seed-2.0-Code（思考） | 73.9% | 火山引擎 API |
 | Volcengine Auto zero-shot | 68.0% | ark-code-latest |
 | Doubao-Seed-2.0-Code（不思考） | 67.6% | 关闭思考模式 |
+
+> **Claude Opus 4.6 评估说明**：每道题由独立的 sub-agent 处理（无共享上下文），数据中已移除 ground truth 字段防止答案泄漏，采用文本格式工具调用而非原生 tool_use API。详见[完整报告](results/report/experiment_report.md#9-claude-opus-46-标杆测试100-条抽样)。
 
 ### 各类别准确率热力图
 

@@ -140,18 +140,33 @@ Gemma4 was already strong on parallel calls (78.3% zero-shot), so the parallel-f
 
 ---
 
-## 9. Claude Opus 4.6 Benchmark (100 Sample)
+## 9. Claude Opus 4.6 Benchmark (100 Sample, Upper Bound Reference)
 
-Claude was evaluated on a stratified 100-entry subset using sub-agents (text-based tool calling, no ground truth leakage).
+Claude Opus 4.6, as one of the strongest general-purpose LLMs available, serves as the **accuracy upper bound reference** for this experiment.
 
-| Model | Accuracy (same 100) |
+### Evaluation Method: Zero Context Contamination
+
+To ensure evaluation fairness, Claude was evaluated using a specially isolated methodology:
+
+1. **Sub-agent isolation**: Each test entry was processed by an independent Claude Code sub-agent with **no shared context** between entries — the model cannot learn from previous answers
+2. **Ground truth removal**: The `ground_truth` field was **completely removed** from evaluation data to prevent the model from "cheating" via answer leakage. An initial run accidentally included ground truth; after discovery, clean batch files (`claude_batch_*_clean.json`) were created and the evaluation was re-run
+3. **Stratified sampling**: 100 entries were sampled from the 782-entry test set with proportional category representation, ensuring the subset mirrors the full test distribution
+4. **Text-based tool calling**: Claude does not use the native `tool_use` API; instead, available tools are described in text prompts and the model outputs tool calls as JSON text — a different format from other models' native tool calling
+
+### Benchmark Results
+
+| Model | Accuracy (same 100 entries) |
 |-------|-------------------|
 | **Claude Opus 4.6** | **87.0%** |
 | Gemma4 26B | 75.0% |
 | Doubao-Code (think) | 69.0% |
 | Volcengine Auto | 60.0% |
 
-Claude achieved 100% on simple, multiple, parallel, java, live_parallel, and live_parallel_multiple categories.
+Claude achieved 100% on simple, multiple, parallel, java, live_parallel, and live_parallel_multiple categories. These are all results from the **zero-contamination** version.
+
+Interestingly, the clean version (87%) scored **higher** than the leaked version (83%). We hypothesize that the presence of the ground truth field distracted the model's attention, causing worse performance on some categories (e.g., parallel dropped from 100% to 88%, sql from 25% to 0%).
+
+> Note: Claude was only evaluated on 100 entries (due to API usage limits). Other models' accuracy on the full 782 entries is more statistically significant. Full Claude evaluation may be completed when API quota allows.
 
 ---
 

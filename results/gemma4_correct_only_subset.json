@@ -1,0 +1,678 @@
+{
+  "correct_examples": [
+    {
+      "id": "live_multiple_170-70-0",
+      "category": "live_multiple",
+      "question": [
+        [
+          {
+            "role": "user",
+            "content": "Get the details of Adriel's internship at Sebelas Maret University?"
+          }
+        ]
+      ],
+      "function": [
+        {
+          "name": "get_detail_adriel_project",
+          "description": "Retrieve detailed information about the specific project that Adriel has contributed to.",
+          "parameters": {
+            "type": "dict",
+            "required": [
+              "project_name"
+            ],
+            "properties": {
+              "project_name": {
+                "type": "string",
+                "description": "The unique name identifier of the project."
+              }
+            }
+          }
+        },
+        {
+          "name": "get_adriel_detail_experience_and_education",
+          "description": "Retrieves detailed information about Adriel's work experiences and educational background.",
+          "parameters": {
+            "type": "dict",
+            "required": [
+              "experience_or_education_name"
+            ],
+            "properties": {
+              "experience_or_education_type": {
+                "type": "string",
+                "description": "Specifies the category for the query, whether it's regarding work experience or education.",
+                "enum": [
+                  "work_experience",
+                  "education"
+                ],
+                "default": "work_experience"
+              },
+              "experience_or_education_name": {
+                "type": "string",
+                "description": "The specific name or title of the experience or educational institution to fetch details for."
+              }
+            }
+          }
+        },
+        {
+          "name": "get_adriel_list_projects",
+          "description": "Retrieves a list of projects that Adriel is currently working on, including project details and status.",
+          "parameters": {
+            "type": "dict",
+            "required": [
+              "user_id"
+            ],
+            "properties": {
+              "user_id": {
+                "type": "integer",
+                "description": "The unique identifier of the user (Adriel) whose projects are to be retrieved."
+              },
+              "include_completed": {
+                "type": "boolean",
+                "description": "Whether to include projects that have already been completed.",
+                "default": false
+              },
+              "start_date": {
+                "type": "string",
+                "description": "The start date for the range of projects to be retrieved, in the format of 'YYYY-MM-DD'.",
+                "default": null
+              },
+              "end_date": {
+                "type": "string",
+                "description": "The end date for the range of projects to be retrieved, in the format of 'YYYY-MM-DD'. By default, it is set to the current date.",
+                "default": null
+              }
+            }
+          }
+        },
+        {
+          "name": "get_adriel_experiences_and_education",
+          "description": "Retrieve a combined list of Adriel's professional experiences and educational background.",
+          "parameters": {
+            "type": "dict",
+            "required": [
+              "user_id"
+            ],
+            "properties": {
+              "user_id": {
+                "type": "integer",
+                "description": "The unique identifier for the user whose experiences and education are being retrieved."
+              },
+              "include_experiences": {
+                "type": "boolean",
+                "description": "Specifies whether to include Adriel's work experiences in the result.",
+                "default": true
+              },
+              "include_education": {
+                "type": "boolean",
+                "description": "Specifies whether to include Adriel's educational history in the result.",
+                "default": true
+              },
+              "sort_order": {
+                "type": "string",
+                "description": "The order in which the combined list should be sorted.",
+                "enum": [
+                  "ascending",
+                  "descending"
+                ],
+                "default": "ascending"
+              },
+              "max_results": {
+                "type": "integer",
+                "description": "The maximum number of items to return in the response.",
+                "default": 10
+              }
+            }
+          }
+        },
+        {
+          "name": "get_adriel_profile",
+          "description": "Retrieves the complete profile information for the user named Adriel, including personal details and preferences.",
+          "parameters": {
+            "type": "dict",
+            "required": [
+              "user_id"
+            ],
+            "properties": {
+              "user_id": {
+                "type": "string",
+                "description": "The unique identifier of the user for whom the profile is being requested."
+              },
+              "include_contact_info": {
+                "type": "boolean",
+                "description": "Determines whether to include the user's contact information in the profile data.",
+                "default": false
+              },
+              "profile_language": {
+                "type": "string",
+                "description": "Preferred language for the profile data presentation.",
+                "enum": [
+                  "English",
+                  "Spanish",
+                  "French",
+                  "German",
+                  "Chinese"
+                ],
+                "default": "English"
+              }
+            }
+          }
+        }
+      ],
+      "ground_truth": [
+        {
+          "get_adriel_detail_experience_and_education": {
+            "experience_or_education_type": [
+              "",
+              "work_experience"
+            ],
+            "experience_or_education_name": [
+              "Internship at Sebelas Maret University",
+              "Sebelas Maret University",
+              "Internship"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "parallel_multiple_163",
+      "category": "parallel_multiple",
+      "question": [
+        [
+          {
+            "role": "user",
+            "content": "\"John is planning to invest in a mutual fund. He has $5000 to start with and the fund he is interested in has an annual yield rate of 7%. He plans to keep his money in the fund for 10 years. After 10 years, he wants to use part of his investment returns to build a circular garden in his backyard. The radius of the garden will be 5 meters. Can you help him calculate how much money he will have in his mutual fund after 10 years and what will be the area of his circular garden?\""
+          }
+        ]
+      ],
+      "function": [
+        {
+          "name": "geometry.calculate_area_circle",
+          "description": "Calculate the area of a circle given its radius.",
+          "parameters": {
+            "type": "dict",
+            "properties": {
+              "radius": {
+                "type": "integer",
+                "description": "The radius of the circle."
+              },
+              "unit": {
+                "type": "string",
+                "description": "The measurement unit of the radius (optional parameter, default is 'units')."
+              }
+            },
+            "required": [
+              "radius"
+            ]
+          }
+        },
+        {
+          "name": "calculate_mutual_fund_balance",
+          "description": "Calculate the final balance of a mutual fund investment based on the total initial investment, annual yield rate and the time period.",
+          "parameters": {
+            "type": "dict",
+            "properties": {
+              "investment_amount": {
+                "type": "integer",
+                "description": "The initial total amount invested in the fund."
+              },
+              "annual_yield": {
+                "type": "float",
+                "description": "The annual yield rate of the fund."
+              },
+              "years": {
+                "type": "integer",
+                "description": "The period of time for the fund to mature."
+              }
+            },
+            "required": [
+              "investment_amount",
+              "annual_yield",
+              "years"
+            ]
+          }
+        }
+      ],
+      "ground_truth": [
+        {
+          "geometry.calculate_area_circle": {
+            "radius": [
+              5
+            ],
+            "unit": [
+              "",
+              "meters",
+              "m",
+              "centimeters",
+              "cm"
+            ]
+          }
+        },
+        {
+          "calculate_mutual_fund_balance": {
+            "investment_amount": [
+              5000
+            ],
+            "annual_yield": [
+              0.07
+            ],
+            "years": [
+              10
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "live_multiple_529-151-5",
+      "category": "live_multiple",
+      "question": [
+        [
+          {
+            "role": "user",
+            "content": "Find any Music events happening in Los Angeles on 04/07/2023?"
+          }
+        ]
+      ],
+      "function": [
+        {
+          "name": "Events_3_FindEvents",
+          "description": "Find cultural events, such as concerts and plays, happening in a specified city on a particular date.",
+          "parameters": {
+            "type": "dict",
+            "required": [
+              "event_type",
+              "city"
+            ],
+            "properties": {
+              "event_type": {
+                "type": "string",
+                "description": "The category of cultural event to find.",
+                "enum": [
+                  "Music",
+                  "Theater"
+                ]
+              },
+              "city": {
+                "type": "string",
+                "description": "The city where the event is being searched for, in the format of 'City, State' (e.g., 'San Francisco, CA'). State names must be abbreviated"
+              },
+              "date": {
+                "type": "string",
+                "description": "The date of the event, formatted as 'MM/DD/YYYY'. If not specified, the search will include events for all upcoming dates.",
+                "default": "dontcare"
+              }
+            }
+          }
+        },
+        {
+          "name": "Events_3_BuyEventTickets",
+          "description": "Purchase tickets for a specific cultural event on a designated date in a selected city.",
+          "parameters": {
+            "type": "dict",
+            "required": [
+              "event_name",
+              "number_of_tickets",
+              "date",
+              "city"
+            ],
+            "properties": {
+              "event_name": {
+                "type": "string",
+                "description": "The title of the cultural event, such as a concert, play, or exhibition."
+              },
+              "number_of_tickets": {
+                "type": "integer",
+                "description": "The quantity of tickets to be purchased for the event."
+              },
+              "date": {
+                "type": "string",
+                "description": "The scheduled date of the event, in the format 'YYYY-MM-DD'."
+              },
+              "city": {
+                "type": "string",
+                "description": "The city in which the event will take place, formatted as 'City, State' or 'City, Country', such as 'New York, NY' or 'London, UK'."
+              }
+            }
+          }
+        }
+      ],
+      "ground_truth": [
+        {
+          "Events_3_FindEvents": {
+            "event_type": [
+              "Music"
+            ],
+            "city": [
+              "Los Angeles, CA"
+            ],
+            "date": [
+              "04/07/2023"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "live_multiple_399-139-3",
+      "category": "live_multiple",
+      "question": [
+        [
+          {
+            "role": "user",
+            "content": "Find a Theater event in Chicago on 2023-5-2?"
+          }
+        ]
+      ],
+      "function": [
+        {
+          "name": "Events_3_FindEvents",
+          "description": "Find cultural events, such as concerts and plays, happening in a specified city on a given date.",
+          "parameters": {
+            "type": "dict",
+            "required": [
+              "event_type",
+              "city"
+            ],
+            "properties": {
+              "event_type": {
+                "type": "string",
+                "description": "The type of cultural event to find. Events include concerts and plays. State names must be abbreviated with two letters.",
+                "enum": [
+                  "Music",
+                  "Theater"
+                ]
+              },
+              "city": {
+                "type": "string",
+                "description": "The city where the event is taking place, in the format 'City, State' or 'City, Country' (e.g., 'New York, NY' or 'London, UK')."
+              },
+              "date": {
+                "type": "string",
+                "description": "The date of the event. Use the format 'YYYY-MM-DD'. If not specified, the current date is used.",
+                "default": null
+              }
+            }
+          }
+        },
+        {
+          "name": "Events_3_BuyEventTickets",
+          "description": "Purchase tickets for a specific cultural event on a chosen date in a specified city.",
+          "parameters": {
+            "type": "dict",
+            "required": [
+              "event_name",
+              "number_of_tickets",
+              "date",
+              "city"
+            ],
+            "properties": {
+              "event_name": {
+                "type": "string",
+                "description": "The official title of the event, such as an artist's name or a play title."
+              },
+              "number_of_tickets": {
+                "type": "integer",
+                "description": "The quantity of tickets to be reserved, must be an integer from 1 to 9.",
+                "enum": [
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7,
+                  8,
+                  9
+                ]
+              },
+              "date": {
+                "type": "string",
+                "description": "The date of the event, formatted as 'YYYY-MM-DD'."
+              },
+              "city": {
+                "type": "string",
+                "description": "The name of the city where the event will take place, formatted as 'City, State' (e.g., 'New York, NY')."
+              }
+            }
+          }
+        },
+        {
+          "name": "RideSharing_2_GetRide",
+          "description": "Book a cab ride to the specified destination with a choice of the number of seats and ride type.",
+          "parameters": {
+            "type": "dict",
+            "required": [
+              "destination",
+              "number_of_seats",
+              "ride_type"
+            ],
+            "properties": {
+              "destination": {
+                "type": "string",
+                "description": "The exact address or location for the cab to arrive at, in the format 'Street, City, State, Zip'. For example, '123 Main St, Springfield, IL, 62701'."
+              },
+              "number_of_seats": {
+                "type": "integer",
+                "description": "The total number of seats to reserve in the cab.",
+                "enum": [
+                  1,
+                  2,
+                  3,
+                  4
+                ]
+              },
+              "ride_type": {
+                "type": "string",
+                "description": "The category of cab service to book.",
+                "enum": [
+                  "Pool",
+                  "Regular",
+                  "Luxury"
+                ]
+              }
+            }
+          }
+        }
+      ],
+      "ground_truth": [
+        {
+          "Events_3_FindEvents": {
+            "event_type": [
+              "Theater"
+            ],
+            "city": [
+              "Chicago, IL"
+            ],
+            "date": [
+              "2023-05-02"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "live_multiple_323-132-13",
+      "category": "live_multiple",
+      "question": [
+        [
+          {
+            "role": "user",
+            "content": "Hi, could you help me search for movies directed by Steven Spielberg and featuring Josef Sommer?"
+          }
+        ]
+      ],
+      "function": [
+        {
+          "name": "Movies_3_FindMovies",
+          "description": "Retrieve a list of movies based on director, genre, and cast preferences.",
+          "parameters": {
+            "type": "dict",
+            "required": [],
+            "properties": {
+              "directed_by": {
+                "type": "string",
+                "description": "Name of the director to filter the movies. Use 'dontcare' to include all directors.",
+                "default": "dontcare"
+              },
+              "genre": {
+                "type": "string",
+                "description": "Genre of the movies to filter. Use 'dontcare' to include all genres.",
+                "enum": [
+                  "Offbeat",
+                  "Fantasy",
+                  "World",
+                  "Mystery",
+                  "Thriller",
+                  "Comedy",
+                  "Comedy-drama",
+                  "Horror",
+                  "Animation",
+                  "Sci-fi",
+                  "Cult",
+                  "Drama",
+                  "Anime",
+                  "Family",
+                  "Action",
+                  "dontcare"
+                ],
+                "default": "dontcare"
+              },
+              "cast": {
+                "type": "string",
+                "description": "Name of the main actor to filter the movies. Use 'dontcare' to include all casts.",
+                "default": "dontcare"
+              }
+            }
+          }
+        },
+        {
+          "name": "Restaurants_2_ReserveRestaurant",
+          "description": "Make a table reservation at a specified restaurant for a certain number of guests on a given date and time.",
+          "parameters": {
+            "type": "dict",
+            "required": [
+              "restaurant_name",
+              "location",
+              "time",
+              "number_of_seats"
+            ],
+            "properties": {
+              "restaurant_name": {
+                "type": "string",
+                "description": "The name of the restaurant where the reservation is to be made."
+              },
+              "location": {
+                "type": "string",
+                "description": "The location of the restaurant in the format of 'City, State', such as 'Berkeley, CA' or 'New York, NY'."
+              },
+              "time": {
+                "type": "string",
+                "description": "The tentative time for the reservation in 24-hour format (e.g., '18:30' for 6:30 PM)."
+              },
+              "number_of_seats": {
+                "type": "integer",
+                "description": "The number of seats to reserve at the restaurant. Must be a positive integer."
+              },
+              "date": {
+                "type": "string",
+                "description": "The tentative date for the reservation in ISO format (YYYY-MM-DD). Defaults to today's date if not provided.",
+                "default": null
+              }
+            }
+          }
+        },
+        {
+          "name": "Restaurants_2_FindRestaurants",
+          "description": "Finds restaurants within a specified location and filtered by category, price range, and vegetarian options availability. The search can also be extended to include restaurants with outdoor seating.",
+          "parameters": {
+            "type": "dict",
+            "required": [
+              "category",
+              "location"
+            ],
+            "properties": {
+              "category": {
+                "type": "string",
+                "description": "The type of cuisine or food category offered by the restaurant, such as 'Italian', 'Chinese', or 'Vegetarian'.",
+                "enum": [
+                  "Mexican",
+                  "Bistro",
+                  "Izakaya",
+                  "Brunch",
+                  "Thai",
+                  "Sandwich",
+                  "Seafood",
+                  "Barbecue",
+                  "European",
+                  "Steakhouse",
+                  "Vietnamese",
+                  "Asian",
+                  "Coffeehouse",
+                  "American",
+                  "Gastropub",
+                  "Austrian",
+                  "Italian",
+                  "Indian",
+                  "Spanish",
+                  "Vegetarian",
+                  "Brasserie",
+                  "Chinese",
+                  "Breakfast",
+                  "Greek",
+                  "California",
+                  "Tapas",
+                  "Take-out",
+                  "Japanese"
+                ]
+              },
+              "location": {
+                "type": "string",
+                "description": "The city where the restaurant is located, in the format of 'City, State', such as 'San Francisco, CA'."
+              },
+              "price_range": {
+                "type": "string",
+                "description": "The price category of the restaurant's offerings. The default is 'dontcare', indicating no preference.",
+                "enum": [
+                  "cheap",
+                  "moderate",
+                  "pricey",
+                  "ultra high-end",
+                  "dontcare"
+                ],
+                "default": "dontcare"
+              },
+              "has_vegetarian_options": {
+                "type": "boolean",
+                "description": "Indicates whether the restaurant provides adequate vegetarian options. The default is 'dontcare', indicating no preference.",
+                "default": "dontcare"
+              },
+              "has_seating_outdoors": {
+                "type": "boolean",
+                "description": "Denotes if the restaurant has outdoor seating available. The default is 'dontcare', indicating no preference.",
+                "default": "dontcare"
+              }
+            }
+          }
+        }
+      ],
+      "ground_truth": [
+        {
+          "Movies_3_FindMovies": {
+            "directed_by": [
+              "Steven Spielberg"
+            ],
+            "genre": [
+              "",
+              "dontcare"
+            ],
+            "cast": [
+              "Josef Sommer"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "error_examples": []
+}
