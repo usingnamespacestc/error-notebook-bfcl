@@ -46,7 +46,7 @@ def load_all_results():
         "Doubao-Code\ncorrect-only": "doubao_correct_only_responses.jsonl",
         "Doubao-Code\nerror-NB": "doubao_error_notebook_responses.jsonl",
         "Doubao-Code\ninterleaved": "doubao_interleaved_responses.jsonl",
-        "Claude Opus 4.6\n(400 sample)": "claude_opus_clean_zero_shot_400.jsonl",
+        "Claude Opus 4.6\n(782 full)": "claude_opus_clean_zero_shot_782.jsonl",
     }
 
     results = {}
