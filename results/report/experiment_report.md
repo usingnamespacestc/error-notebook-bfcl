@@ -1,143 +1,157 @@
-# Error Notebook Experiment Report
-## BFCL V4 Tool Calling Benchmark
+# 错题本实验报告
+## BFCL V4 工具调用基准测试
 
-**Date**: 2026-04-08
-**Benchmark**: Berkeley Function Calling Leaderboard V4
-**Test set**: 782 entries across 11 categories
+**日期**：2026-04-08
+**基准**：Berkeley Function Calling Leaderboard V4
+**测试集**：782 条数据，覆盖 11 个类别
 
----
-
-## 1. Executive Summary
-
-We developed an **Error Notebook** (错题本) approach for improving LLM tool-calling accuracy through corrective few-shot prompting. The key idea: instead of showing models correct examples, show them **common mistakes and their corrections**.
-
-### Key Results
-
-| Approach | Volcengine Auto | Gemma4 26B |
-|----------|----------------|------------|
-| Zero-shot baseline | 68.0% | 76.3% |
-| Error Notebook (error-only) | **79.0% (+11.0pp)** | — |
-| Error Notebook (mixed 5+5) | 76.3% (+8.3pp) | 78.6% (+2.3pp) |
-| Interleaved (alternating) | **79.0% (+11.0pp)** | — |
-| Correct-only few-shot | 64.7% (-3.3pp) | — |
-
-
-**Main finding**: Error correction examples provide all the improvement. Positive examples alone actually hurt performance (-3.3pp). The benefit is largest for models that are weak on parallel function calling.
+> [English Version](experiment_report_en.md)
 
 ---
 
-## 2. Bug Fixes in Evaluation Pipeline
+## 1. 概述
 
-Two critical bugs were discovered and fixed in the BFCL AST checker:
+本项目提出**错题本**方法，通过纠错式 Few-Shot 提示改进大模型的工具调用准确率。核心思想：与其向模型展示正确示例，不如展示**常见错误及其修正**。
 
-### Bug 1: `underscore_to_dot` Default
-- **File**: `eval/bfcl_eval/constants/model_config.py`
-- **Issue**: `underscore_to_dot` defaulted to `True`, converting `func.name` → `func_name` in expected answers, causing false `wrong_func_name` errors
-- **Impact**: ~25pp accuracy inflation for `wrong_func_name` errors
-- **Fix**: Changed default to `False`
+### 核心结果
 
-### Bug 2: Java/JS Type Stringification
-- **File**: `eval/bfcl_ast_checker.py`
-- **Issue**: Java/JS type checkers expected string inputs (from text-based tool calling), but structured JSON tool calling produces typed values (int, bool, etc.)
-- **Impact**: 0% accuracy on all Java/JavaScript categories
-- **Fix**: Added `_stringify_value()` to auto-convert typed values before Java/JS type checkers
+| 方法 | Volcengine Auto | Gemma4 26B |
+|------|----------------|------------|
+| Zero-shot 基线 | 68.0% | 76.3% |
+| 纯错题（5道纠错） | **79.0% (+11.0pp)** | **78.6% (+2.3pp)** |
+| 混合 5+5（正确+纠错） | 76.3% (+8.3pp) | 78.6% (+2.3pp) |
+| 交替排列（正→错→正→错） | **79.0% (+11.0pp)** | 78.0% (+1.7pp) |
+| 纯正面示例（5道正确） | 64.7% (-3.3pp) | 77.7% (+1.4pp) |
 
----
-
-## 3. Models Evaluated
-
-| Model | Type | Notes |
-|-------|------|-------|
-| Gemma4 26B | Local (Ollama) | Native tool calling, thinking enabled |
-| Volcengine Auto (ark-code-latest) | Cloud API | Volcano Engine coding model |
-| Doubao-Seed-2.0-Code | Cloud API | With and without thinking |
-| Claude Opus 4.6 | Sub-agent | Text-based tool calling (100 sample) |
+**主要发现**：纠错示例是主要提升因素。模型越弱，效果越大（Volcengine +11pp vs Gemma4 +2.3pp）。对弱模型，正面示例反而有害（-3.3pp）；对强模型，正面示例也有少量帮助。
 
 ---
 
-## 4. Overall Accuracy Comparison
+## 2. 评估流程中的 Bug 修复
 
-![Overall Accuracy](report/01_overall_accuracy.png)
+在 BFCL 官方 AST checker 中发现并修复了两个关键 bug：
+
+### Bug 1：`underscore_to_dot` 默认值错误
+- **文件**：`eval/bfcl_eval/constants/model_config.py`
+- **问题**：默认值为 `True`，导致 `func.name` 在验证时被转换为 `func_name`，触发大量假阳性的 `wrong_func_name` 错误
+- **影响**：所有模型准确率虚低约 25 个百分点
+- **修复**：改为 `False`
+
+### Bug 2：Java/JS 类型字符串化
+- **文件**：`eval/bfcl_ast_checker.py`
+- **问题**：Java/JS 类型检查器期望字符串输入（为文本输出设计），但结构化 JSON 工具调用产生原生类型值（int、bool 等）
+- **影响**：所有 Java/JavaScript 类别准确率为 0%
+- **修复**：添加 `_stringify_value()` 自动将原生类型转为字符串
 
 ---
 
-## 5. Error Notebook Method
+## 3. 评测模型
 
-### Pipeline
-1. **Pool Inference**: Run target model on pool.jsonl (training data)
-2. **Error Classification**: Classify predictions using AST checker
-3. **K-Medoids Selection**: Select k representative error examples per error type
-4. **Prompt Construction**: Build corrective few-shot context
-5. **Evaluation**: Test on held-out test set
+| 模型 | 类型 | 说明 |
+|------|------|------|
+| Gemma4 26B | 本地 (Ollama) | 原生工具调用，启用思考模式 |
+| Volcengine Auto (ark-code-latest) | 云端 API | 火山引擎编程模型 |
+| Doubao-Seed-2.0-Code | 云端 API | 分别测试开启/关闭思考模式 |
+| Claude Opus 4.6 | Sub-agent | 文本格式工具调用，100 条抽样 |
 
-### Prompt Structure (Error-Only, Best Variant)
+---
+
+## 4. 总体准确率对比
+
+![总体准确率](01_overall_accuracy.png)
+
+---
+
+## 5. 错题本方法
+
+### 流程
+1. **Pool 推理**：用目标模型在 pool.jsonl（训练数据）上跑推理
+2. **错误分类**：用 AST checker 将预测分类为不同错误类型
+3. **K-Medoids 选择**：按错误类型比例选出 k 个最具代表性的错题
+4. **构建提示**：将「错误→纠正」配对作为 Few-Shot 上下文
+5. **评估**：在留出的测试集上测试
+
+### 提示结构（纯错题模式，效果最佳）
 ```
 System: You are a helpful assistant that calls tools accurately...
 
-[Error Correction 1]
-User: <question>
-Assistant: <wrong tool_call>
-User: "That tool call has an error: <error description>. The correct call should be: <correct call>"
-Assistant: <correct tool_call>
+[纠错示例 1]
+User: <问题>
+Assistant: <错误的 tool_call>
+User: "这个工具调用有误：<错误描述>。正确的调用应该是：<正确调用>"
+Assistant: <正确的 tool_call>
 
-[Error Correction 2-5]
+[纠错示例 2-5]
 ...
 
-[Target Question]
-User: <target question>
+[目标问题]
+User: <实际要回答的问题>
 ```
 
 ---
 
-## 6. Ablation Study
+## 6. 消融实验
 
-![Ablation Study](report/02_ablation_study.png)
+![消融实验](02_ablation_study.png)
 
-| Variant | Accuracy | vs Zero-shot |
-|---------|----------|-------------|
-| Error-only (5 corrections) | **79.0%** | **+11.0pp** |
-| Interleaved (alternating) | **79.0%** | **+11.0pp** |
-| Mixed 5+5 (correct+error) | 76.3% | +8.3pp |
-| Zero-shot baseline | 68.0% | — |
-| Correct-only (5 positive) | 64.7% | -3.3pp |
+### Volcengine Auto (ark-code-latest)
 
-### Key Insights
-1. **Error corrections are the sole driver of improvement** — positive examples contribute nothing
-2. **Positive-only few-shot hurts performance** — likely due to context length overhead without useful signal
-3. The improvement is **concentrated in parallel calling categories** (0% → 80%+)
+| 变体 | 准确率 | vs Zero-shot |
+|------|--------|-------------|
+| 纯错题（5道纠错） | **79.0%** | **+11.0pp** |
+| 交替排列（正→错交替） | **79.0%** | **+11.0pp** |
+| 混合 5+5（正确+纠错） | 76.3% | +8.3pp |
+| Zero-shot 基线 | 68.0% | — |
+| 纯正面示例（5道正确） | 64.7% | -3.3pp |
 
----
+### Gemma4 26B
 
-## 7. Per-Category Analysis
+| 变体 | 准确率 | vs Zero-shot |
+|------|--------|-------------|
+| 纯错题（5道纠错） | **78.6%** | **+2.3pp** |
+| 混合 5+5（正确+纠错） | **78.6%** | **+2.3pp** |
+| 交替排列（正→错交替） | 78.0% | +1.7pp |
+| 纯正面示例（5道正确） | 77.7% | +1.4pp |
+| Zero-shot 基线 | 76.3% | — |
 
-![Category Heatmap](report/03_category_heatmap.png)
-
-![Error Notebook Delta](report/04_error_notebook_delta.png)
-
-### Volcengine Auto: Error-Only Impact
-- **parallel**: 0% → 81.5% (+81.5pp)
-- **parallel_multiple**: 18.3% → 84.8% (+66.5pp)
-- **live_parallel_multiple**: 37.5% → 100% (+62.5pp)
-- Minor regressions in simple/live_simple categories (-2 to -5pp)
-
-### Gemma4 26B: Error-NB Impact
-- **parallel**: 78.3% → 97.2% (+18.9pp)
-- **sql**: 16.7% → 36.8% (+20.2pp)
-- **simple**: 88.3% → 96.4% (+8.1pp)
-- But: **live_parallel**: 80% → 50% (-30pp) — error corrections for wrong model confused it
-
-### Why Different Results?
-Gemma4 was already strong on parallel calls (78.3% zero-shot), so the parallel-focused error corrections provided diminishing returns and sometimes interfered. Volcengine Auto was at 0% on parallel, making the error corrections transformative.
-
-**Implication**: Error notebook works best when targeted at the model's **actual weaknesses**.
+### 关键洞察
+1. **纠错示例是主要提升驱动力**——在 Volcengine Auto 上，正面示例完全无贡献甚至有害（-3.3pp）
+2. **模型越弱，错题本效果越大**——Volcengine Auto（zero-shot 68%）提升 +11pp，Gemma4（zero-shot 76.3%）提升 +2.3pp
+3. **Gemma4 上正面示例也有少量帮助**（+1.4pp），说明对于本身较强的模型，正面示例不会造成干扰
+4. 提升**集中在并行调用类别**（Volcengine Auto 从 0% 提升到 80%+）
 
 ---
 
-## 8. Error Distribution
+## 7. 各类别分析
 
-![Volcengine Error Distribution](report/05_volcengine_errors.png)
+![类别热力图](03_category_heatmap.png)
 
-![Gemma4 Error Distribution](report/06_gemma4_errors.png)
+![错题本提升幅度](04_error_notebook_delta.png)
+
+### Volcengine Auto：纯错题效果
+- **parallel**：0% → 81.5%（+81.5pp）
+- **parallel_multiple**：18.3% → 84.8%（+66.5pp）
+- **live_parallel_multiple**：37.5% → 100%（+62.5pp）
+- simple/live_simple 类别有轻微下降（-2 到 -5pp）
+
+### Gemma4 26B：错题本效果
+- **parallel**：78.3% → 97.2%（+18.9pp）
+- **sql**：16.7% → 36.8%（+20.2pp）
+- **simple**：88.3% → 96.4%（+8.1pp）
+- 但 **live_parallel**：80% → 50%（-30pp）——针对错误模型的纠错示例反而造成混乱
+
+### 为什么两个模型效果差异大？
+Gemma4 在并行调用上本身就很强（78.3% zero-shot），因此针对并行的纠错示例带来的是边际递减效应，有时甚至产生干扰。而 Volcengine Auto 在并行上是 0%，纠错示例带来了变革性的提升。
+
+**启示**：错题本在针对模型**实际薄弱环节**时效果最佳。
+
+---
+
+## 8. 错误分布
+
+![Volcengine 错误分布](05_volcengine_errors.png)
+
+![Gemma4 错误分布](06_gemma4_errors.png)
 
 ---
 
@@ -171,51 +185,27 @@ Claude 在 simple、multiple、parallel、java、live_parallel 和 live_parallel
 
 ---
 
-## 10. Thinking Mode Analysis
+## 10. 思考模式分析
 
-| Model | Think | No-think | Delta |
-|-------|-------|---------|-------|
-| Doubao-Seed-2.0-Code | 73.9% | 67.7% | +6.2pp |
+| 模型 | 开启思考 | 关闭思考 | 差异 |
+|------|---------|---------|------|
+| Doubao-Seed-2.0-Code | 73.9% | 67.6% | +6.3pp |
 
-Thinking mode improves tool calling accuracy, particularly for parallel calls requiring multi-step reasoning.
-
----
-
-## 11. Files and Artifacts
-
-### New Scripts
-- `eval/run_pool_inference.py` — Local pool inference
-- `eval/volcengine_pool_inference.py` — Cloud pool inference
-- `eval/classify_pool_errors.py` — Error classification
-- `search/error_notebook_selection.py` — K-Medoids selection
-- `eval/error_notebook_eval.py` — Local error notebook eval
-- `eval/volcengine_error_notebook_eval.py` — Cloud error notebook eval
-- `analysis/generate_report.py` — This report generator
-
-### Bug Fixes
-- `eval/bfcl_eval/constants/model_config.py` — underscore_to_dot default
-- `eval/bfcl_ast_checker.py` — Java/JS type stringification
-
-### Result Files
-- `results/volcengine_*_responses.jsonl` — All volcengine evaluations
-- `results/gemma4_error_notebook_responses.jsonl` — Gemma4 error notebook eval
-- `results/claude_opus_clean_zero_shot_responses.jsonl` — Claude evaluation
-- `results/volcengine_auto_error_notebook_subset.json` — Selected error examples
-- `results/report/` — Charts and this report
+思考模式提升了工具调用准确率，尤其是需要多步推理的并行调用。因此后续消融实验选用 Doubao-Seed-2.0-Code（开启思考模式）作为指定模型。
 
 ---
 
-## 12. Conclusions and Next Steps
+## 11. 结论与后续方向
 
-### Conclusions
-1. **Error Notebook is effective**: +11.0pp improvement on Volcengine Auto (68% → 79.0%)
-2. **Only error corrections matter**: Positive examples are unnecessary or harmful
-3. **Targeted to weaknesses**: Most effective when the model has clear failure modes (e.g., 0% on parallel)
-4. **Two major evaluation bugs fixed**: Previous accuracy numbers were ~25pp too low across all models
+### 结论
+1. **错题本方法有效**：Volcengine Auto 提升 +11.0pp（68% → 79.0%），Gemma4 提升 +2.3pp（76.3% → 78.6%）
+2. **纠错示例是主要驱动力**：正面示例对弱模型有害（-3.3pp），对强模型有少量帮助（+1.4pp）
+3. **针对弱点效果最佳**：模型有明确失败模式时（如并行调用 0%）效果最显著
+4. **修复了两个重大评估 bug**：之前所有模型的准确率数字都偏低约 25pp
 
-### Potential Next Steps
-- [ ] Run Claude Opus on full 782 test set (pending API quota)
-- [ ] Try different k values (k=3, k=8, k=10) for error corrections
-- [ ] Category-specific error notebooks (e.g., sql-focused corrections)
-- [ ] Test error notebook on Gemma4 with only its weak categories' errors
-- [ ] Evaluate error notebook on Doubao-Seed-2.0-Code
+### 可能的后续方向
+- [ ] 用 Doubao-Seed-2.0-Code（指定模型）重新跑完整消融实验
+- [ ] 在完整 782 条测试集上运行 Claude Opus（待 API 额度）
+- [ ] 尝试不同的 k 值（k=3, k=8, k=10）
+- [ ] 按类别定制错题本（如针对 sql 的专项纠错）
+- [ ] 仅用 Gemma4 弱项类别的错误来构建错题本
