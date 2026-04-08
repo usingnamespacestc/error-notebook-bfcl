@@ -1,0 +1,29 @@
+# Cache and temporary files
+cache/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Large data files (available from BFCL repo)
+data/raw/
+data/pool.jsonl
+data/test.jsonl
+
+# Embeddings (can be regenerated)
+data/embeddings/
+
+# Claude batch files with ground truth (data leakage versions)
+data/claude_batch_[0-4].json
+results/claude_batch_*_responses.jsonl
+results/claude_opus_zero_shot_responses.jsonl
+
+# Intermediate/duplicate result files
+results/pool_predictions.jsonl
+results/volcengine_ark-code-latest_pool_predictions.jsonl
+results/annealing_log.jsonl
+results/selected_kshot_responses.jsonl
+results/selected_kshot_nomerge_responses.jsonl
+
+# Environment
+.env
+*.env

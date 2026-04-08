@@ -1,0 +1,659 @@
+[
+  {
+    "id": "live_multiple_507-149-4",
+    "category": "live_multiple",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "I need to purchase a one-way Economy class flight ticket from LA to New York for March 14th."
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "Flights_4_SearchOnewayFlight",
+        "description": "Search for one-way flights from an origin to a destination on a specified date, with options for seating class and preferred airlines.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "origin_airport",
+            "destination_airport",
+            "departure_date"
+          ],
+          "properties": {
+            "origin_airport": {
+              "type": "string",
+              "description": "The IATA airport code or the name of the city to depart from, such as 'JFK' for John F. Kennedy International Airport or 'New York'."
+            },
+            "destination_airport": {
+              "type": "string",
+              "description": "The IATA airport code or the name of the city to arrive at, such as 'LAX' for Los Angeles International Airport or 'Los Angeles'."
+            },
+            "departure_date": {
+              "type": "string",
+              "description": "The start date of the trip in the format 'YYYY-MM-DD', such as '2023-04-15'."
+            },
+            "seating_class": {
+              "type": "string",
+              "description": "The cabin class option for the flight.",
+              "enum": [
+                "Economy",
+                "Premium Economy",
+                "Business"
+              ],
+              "default": "Economy"
+            },
+            "number_of_tickets": {
+              "type": "integer",
+              "description": "The number of flight tickets required for the trip.",
+              "default": 1
+            },
+            "airlines": {
+              "type": "string",
+              "description": "The preferred airline for the flight. Use 'dontcare' to include all available airlines.",
+              "enum": [
+                "United Airlines",
+                "American Airlines",
+                "Delta Airlines",
+                "Southwest Airlines",
+                "Alaska Airlines",
+                "British Airways",
+                "Air Canada",
+                "Air France",
+                "South African Airways",
+                "LOT Polish Airlines",
+                "LATAM Brasil",
+                "dontcare"
+              ],
+              "default": "dontcare"
+            }
+          }
+        }
+      },
+      {
+        "name": "Flights_4_SearchRoundtripFlights",
+        "description": "Search for available roundtrip flights based on specific criteria such as airports, dates, seating class, and airline preference.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "origin_airport",
+            "destination_airport",
+            "departure_date",
+            "return_date"
+          ],
+          "properties": {
+            "origin_airport": {
+              "type": "string",
+              "description": "The IATA airport code or city name where the trip will begin. For example, 'LAX' for Los Angeles International Airport."
+            },
+            "destination_airport": {
+              "type": "string",
+              "description": "The IATA airport code or city name of the intended destination. For example, 'JFK' for John F. Kennedy International Airport."
+            },
+            "departure_date": {
+              "type": "string",
+              "description": "The departure date for the outbound flight, in the format 'YYYY-MM-DD'."
+            },
+            "return_date": {
+              "type": "string",
+              "description": "The return date for the inbound flight, in the format 'YYYY-MM-DD'."
+            },
+            "seating_class": {
+              "type": "string",
+              "description": "The class of service for seating on the flight.",
+              "enum": [
+                "Economy",
+                "Premium Economy",
+                "Business"
+              ],
+              "default": "Economy"
+            },
+            "number_of_tickets": {
+              "type": "integer",
+              "description": "The total number of tickets to book for the trip.",
+              "default": 1
+            },
+            "airlines": {
+              "type": "string",
+              "description": "Preferred airline for the trip. Select 'dontcare' if no preference.",
+              "enum": [
+                "United Airlines",
+                "American Airlines",
+                "Delta Airlines",
+                "Southwest Airlines",
+                "Alaska Airlines",
+                "British Airways",
+                "Air Canada",
+                "Air France",
+                "South African Airways",
+                "LOT Polish Airlines",
+                "LATAM Brasil",
+                "dontcare"
+              ],
+              "default": "dontcare"
+            }
+          }
+        }
+      },
+      {
+        "name": "Trains_1_GetTrainTickets",
+        "description": "Reserve train tickets for a specified journey between two cities on a given date and time, with options for the number of adults, trip protection, and fare class.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "_from",
+            "to",
+            "date_of_journey",
+            "journey_start_time"
+          ],
+          "properties": {
+            "_from": {
+              "type": "string",
+              "description": "The departure city for the train journey, in the format of 'City, State' (e.g., 'New York, NY')."
+            },
+            "to": {
+              "type": "string",
+              "description": "The destination city for the train journey, in the format of 'City, State' (e.g., 'Los Angeles, CA')."
+            },
+            "date_of_journey": {
+              "type": "string",
+              "description": "The date of the train journey in the format 'YYYY-MM-DD' (e.g., '2023-04-15')."
+            },
+            "journey_start_time": {
+              "type": "string",
+              "description": "The departure time for the train journey in 24-hour format 'HH:MM' (e.g., '13:45')."
+            },
+            "number_of_adults": {
+              "type": "integer",
+              "description": "The number of adults to reserve train tickets for.",
+              "default": 1
+            },
+            "trip_protection": {
+              "type": "boolean",
+              "description": "Indicates whether to add trip protection to the reservation, which incurs an additional fee.",
+              "default": false
+            },
+            "_class": {
+              "type": "string",
+              "description": "The fare class for the train reservation.",
+              "enum": [
+                "Value",
+                "Flexible",
+                "Business"
+              ],
+              "default": "Value"
+            }
+          }
+        }
+      },
+      {
+        "name": "Trains_1_FindTrains",
+        "description": "Finds available train services to a specified destination city on a given date, allowing for reservation in different fare classes.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "_from",
+            "to",
+            "date_of_journey"
+          ],
+          "properties": {
+            "_from": {
+              "type": "string",
+              "description": "The name of the starting city for the train journey, in the format of 'City, State', such as 'Los Angeles, CA'."
+            },
+            "to": {
+              "type": "string",
+              "description": "The destination city for the train journey, also in the format of 'City, State', like 'Chicago, IL'."
+            },
+            "date_of_journey": {
+              "type": "string",
+              "description": "The date on which the train journey is scheduled, in the format 'YYYY-MM-DD'."
+            },
+            "_class": {
+              "type": "string",
+              "description": "The fare class for the train reservation.",
+              "enum": [
+                "Value",
+                "Flexible",
+                "Business"
+              ],
+              "default": "Value"
+            },
+            "number_of_adults": {
+              "type": "integer",
+              "description": "The number of adults for whom the train tickets are to be reserved. Must be an integer between 1 and 5.",
+              "default": 1
+            }
+          }
+        }
+      }
+    ],
+    "ground_truth": [
+      {
+        "Flights_4_SearchOnewayFlight": {
+          "origin_airport": [
+            ""
+          ],
+          "destination_airport": [
+            "New York"
+          ],
+          "departure_date": [
+            "2023-03-14"
+          ],
+          "seating_class": [
+            "",
+            "Economy"
+          ],
+          "number_of_tickets": [
+            1
+          ],
+          "airlines": [
+            "",
+            "dontcare"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "live_multiple_761-169-16",
+    "category": "live_multiple",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "i am looking for some horror movies online similar to dean norris"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "Media_3_FindMovies",
+        "description": "Explore a selection of movies online based on specified genre and actors.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "genre"
+          ],
+          "properties": {
+            "genre": {
+              "type": "string",
+              "description": "The genre of the movies to search for.",
+              "enum": [
+                "World",
+                "Fantasy",
+                "Offbeat",
+                "Mystery",
+                "Musical",
+                "Thriller",
+                "Comedy",
+                "Comedy-drama",
+                "Horror",
+                "Animation",
+                "Cult",
+                "Sci-fi",
+                "War",
+                "Drama",
+                "Anime",
+                "Family",
+                "Action"
+              ]
+            },
+            "starring": {
+              "type": "string",
+              "description": "The name of a specific actor or actress to filter the movies by. Use 'Any' for no specific preference.",
+              "default": "Any"
+            }
+          }
+        }
+      },
+      {
+        "name": "Media_3_PlayMovie",
+        "description": "Streams a movie instantly online with the option to select preferred subtitles.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "title"
+          ],
+          "properties": {
+            "title": {
+              "type": "string",
+              "description": "The title of the movie to be streamed."
+            },
+            "subtitle_language": {
+              "type": "string",
+              "description": "The language of the subtitles to accompany the movie.",
+              "enum": [
+                "English",
+                "Spanish",
+                "Hindi",
+                "French"
+              ],
+              "default": "English"
+            }
+          }
+        }
+      },
+      {
+        "name": "Music_3_PlayMedia",
+        "description": "Plays the specified music track on a designated media player device.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "track"
+          ],
+          "properties": {
+            "track": {
+              "type": "string",
+              "description": "The title of the song to be played."
+            },
+            "artist": {
+              "type": "string",
+              "description": "The name of the artist performing the song. If unspecified, any artist will be considered.",
+              "default": "any"
+            },
+            "device": {
+              "type": "string",
+              "description": "The name of the device or location where the music will be played.",
+              "enum": [
+                "Living room",
+                "Kitchen",
+                "Patio"
+              ],
+              "default": "Living room"
+            },
+            "album": {
+              "type": "string",
+              "description": "The name of the album from which the song is taken. If unspecified, any album will be considered.",
+              "default": "any"
+            }
+          }
+        }
+      },
+      {
+        "name": "Music_3_LookupMusic",
+        "description": "Discover songs that align with your musical preferences by specifying the artist, album, genre, and release year.",
+        "parameters": {
+          "type": "dict",
+          "required": [],
+          "properties": {
+            "artist": {
+              "type": "string",
+              "description": "The first and last name of the artist or the name of the band you are interested in. Use 'dontcare' if you have no preference.",
+              "default": "dontcare"
+            },
+            "album": {
+              "type": "string",
+              "description": "The album title that contains the songs you are looking for. Use 'dontcare' if you have no preference.",
+              "default": "dontcare"
+            },
+            "genre": {
+              "type": "string",
+              "description": "The music genre of the songs you want to find. Use 'dontcare' to include all genres.",
+              "default": "dontcare",
+              "enum": [
+                "Reggae",
+                "Holiday",
+                "Electropop",
+                "Pop",
+                "Asia",
+                "House",
+                "Electronica",
+                "Funk",
+                "Rock",
+                "Metal",
+                "Dubstep",
+                "Country",
+                "dontcare"
+              ]
+            },
+            "year": {
+              "type": "string",
+              "description": "The year of release for the music you're searching for, formatted as 'YYYY'. Use 'dontcare' if the release year is not a concern.",
+              "default": "dontcare",
+              "enum": [
+                "2010",
+                "2011",
+                "2012",
+                "2013",
+                "2014",
+                "2015",
+                "2016",
+                "2017",
+                "2018",
+                "2019",
+                "2020",
+                "2021",
+                "2022",
+                "2023",
+                "2024",
+                "dontcare"
+              ]
+            }
+          }
+        }
+      },
+      {
+        "name": "Travel_1_FindAttractions",
+        "description": "Browse attractions in a given city, filtering by free entry status, attraction category, and suitability for children.",
+        "parameters": {
+          "type": "dict",
+          "required": [
+            "location"
+          ],
+          "properties": {
+            "location": {
+              "type": "string",
+              "description": "The city or town where the attraction is located, in the format of 'City, State' or 'City, Country' if the city does not locate in the United States, such as 'Orlando, FL' or 'Paris, FR'."
+            },
+            "free_entry": {
+              "type": "string",
+              "description": "Flag indicating whether the entrance to the attraction is free. If set to 'dontcare', it will include all attractions regardless of their entry fee status.",
+              "enum": [
+                "True",
+                "False",
+                "dontcare"
+              ],
+              "default": "dontcare"
+            },
+            "category": {
+              "type": "string",
+              "description": "The category to which the attraction belongs. If set to 'dontcare', it will include attractions from all categories.",
+              "enum": [
+                "Place of Worship",
+                "Theme Park",
+                "Museum",
+                "Historical Landmark",
+                "Park",
+                "Tourist Attraction",
+                "Sports Venue",
+                "Shopping Area",
+                "Performing Arts Venue",
+                "Nature Preserve",
+                "dontcare"
+              ],
+              "default": "dontcare"
+            },
+            "good_for_kids": {
+              "type": "string",
+              "description": "Flag indicating whether the attraction is suitable for children. If set to 'dontcare', it will include attractions regardless of their suitability for children.",
+              "enum": [
+                "True",
+                "False",
+                "dontcare"
+              ],
+              "default": "dontcare"
+            }
+          }
+        }
+      }
+    ],
+    "ground_truth": [
+      {
+        "Media_3_FindMovies": {
+          "genre": [
+            "Horror"
+          ],
+          "starring": [
+            "Dean Norris"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "simple_122",
+    "category": "simple",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "Perform a Chi-Squared test for independence on a 2x2 contingency table [ [10, 20], [30, 40] ]"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "chi_squared_test",
+        "description": "Performs a Chi-Squared test for independence on a 2x2 contingency table.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "table": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                }
+              },
+              "description": "A 2x2 contingency table presented in array form."
+            },
+            "alpha": {
+              "type": "float",
+              "description": "Significance level for the Chi-Squared test. Default is 0.05."
+            }
+          },
+          "required": [
+            "table"
+          ]
+        }
+      }
+    ],
+    "ground_truth": [
+      {
+        "chi_squared_test": {
+          "table": [
+            [
+              [
+                10,
+                20
+              ],
+              [
+                30,
+                40
+              ]
+            ]
+          ],
+          "alpha": [
+            0.05,
+            ""
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "java_91",
+    "category": "java",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "Help me execute the 'runIt' method to process command-line arguments for a debug session, and log the output to a specific PrintStream, using the arguments array ['suspend', 'log'] and a PrintStream variable named 'debugLog'?"
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "invokemethod007.runIt",
+        "description": "Processes command-line arguments for a debug session and logs the output to the provided PrintStream.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "args": {
+              "type": "Array",
+              "description": "An array of command-line arguments to process.",
+              "items": {
+                "type": "String"
+              }
+            },
+            "out": {
+              "type": "any",
+              "description": "The PrintStream to which the output will be logged."
+            }
+          },
+          "required": [
+            "args",
+            "out"
+          ]
+        }
+      }
+    ],
+    "ground_truth": [
+      {
+        "invokemethod007.runIt": {
+          "args": [
+            [
+              "suspend",
+              "log"
+            ]
+          ],
+          "out": [
+            "debugLog"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "simple_336",
+    "category": "simple",
+    "question": [
+      [
+        {
+          "role": "user",
+          "content": "Shuffle a deck of cards, and draw 3 cards from the top."
+        }
+      ]
+    ],
+    "function": [
+      {
+        "name": "cards.shuffle_and_draw",
+        "description": "Shuffle a standard deck of 52 cards and draw a specified number of cards from the top.",
+        "parameters": {
+          "type": "dict",
+          "properties": {
+            "num_cards": {
+              "type": "integer",
+              "description": "Number of cards to be drawn. The default is 1 if no value is provided."
+            }
+          },
+          "required": [
+            "num_cards"
+          ]
+        }
+      }
+    ],
+    "ground_truth": [
+      {
+        "cards.shuffle_and_draw": {
+          "num_cards": [
+            3
+          ]
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,30 @@
+JAVA_TYPE_CONVERSION = {
+    "byte": int,
+    "short": int,
+    "integer": int,
+    "float": float,
+    "double": float,
+    "long": int,
+    "boolean": bool,
+    "char": str,
+    "Array": list,
+    "ArrayList": list,
+    "Set": set,
+    "HashMap": dict,
+    "Hashtable": dict,
+    "Queue": list,
+    "Stack": list,
+    "String": str,
+    "any": str,
+}
+
+JS_TYPE_CONVERSION = {
+    "String": str,
+    "integer": int,
+    "float": float,
+    "Bigint": int,
+    "Boolean": bool,
+    "dict": dict,
+    "array": list,
+    "any": str,
+}
