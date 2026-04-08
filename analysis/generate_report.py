@@ -42,6 +42,10 @@ def load_all_results():
         "Volcengine Auto\ninterleaved": "volcengine_ark-code-latest_interleaved_responses.jsonl",
         "Doubao-Code\n(think)": "volcengine_doubao-seed-2-0-code_zero_shot_responses.jsonl",
         "Doubao-Code\n(nothink)": "volcengine_doubao-seed-2-0-code_nothink_zero_shot_responses.jsonl",
+        "Doubao-Code\nerror-only": "doubao_error_only_responses.jsonl",
+        "Doubao-Code\ncorrect-only": "doubao_correct_only_responses.jsonl",
+        "Doubao-Code\nerror-NB": "doubao_error_notebook_responses.jsonl",
+        "Doubao-Code\ninterleaved": "doubao_interleaved_responses.jsonl",
         "Claude Opus 4.6\n(200 sample)": "claude_opus_clean_zero_shot_200.jsonl",
     }
 
@@ -102,8 +106,8 @@ def plot_overall_accuracy(results):
 
 
 def plot_ablation_study(results):
-    """Side-by-side ablation study for both models."""
-    fig, axes = plt.subplots(1, 2, figsize=(16, 6))
+    """Side-by-side ablation study for three models."""
+    fig, axes = plt.subplots(1, 3, figsize=(20, 6))
 
     ablation_labels = [
         "Zero-shot\n(baseline)",
@@ -114,45 +118,38 @@ def plot_ablation_study(results):
     ]
     colors_abl = ["#3498DB", "#E74C3C", "#F39C12", "#27AE60", "#2ECC71"]
 
-    # Volcengine Auto
-    volc_keys = [
-        "Volcengine Auto\nzero-shot", "Volcengine Auto\ncorrect-only",
-        "Volcengine Auto\nerror-NB", "Volcengine Auto\ninterleaved",
-        "Volcengine Auto\nerror-only",
+    models = [
+        ("Volcengine Auto (ark-code-latest)", [
+            "Volcengine Auto\nzero-shot", "Volcengine Auto\ncorrect-only",
+            "Volcengine Auto\nerror-NB", "Volcengine Auto\ninterleaved",
+            "Volcengine Auto\nerror-only",
+        ], (55, 85)),
+        ("Doubao-Seed-2.0-Code (think)", [
+            "Doubao-Code\n(think)", "Doubao-Code\ncorrect-only",
+            "Doubao-Code\nerror-NB", "Doubao-Code\ninterleaved",
+            "Doubao-Code\nerror-only",
+        ], (68, 88)),
+        ("Gemma4 26B", [
+            "Gemma4 26B\nzero-shot", "Gemma4 26B\ncorrect-only",
+            "Gemma4 26B\nerror-NB", "Gemma4 26B\ninterleaved",
+            "Gemma4 26B\nerror-only",
+        ], (73, 82)),
     ]
-    ax = axes[0]
-    accs = [results[k]["overall"] * 100 if k in results else 0 for k in volc_keys]
-    bars = ax.bar(range(len(ablation_labels)), accs, color=colors_abl, edgecolor='white', width=0.6)
-    for bar, acc in zip(bars, accs):
-        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.5,
-                f'{acc:.1f}%', ha='center', va='bottom', fontsize=10, fontweight='bold')
-    ax.set_xticks(range(len(ablation_labels)))
-    ax.set_xticklabels(ablation_labels, fontsize=8)
-    ax.set_ylabel('Accuracy (%)', fontsize=11)
-    ax.set_title('Volcengine Auto (ark-code-latest)', fontsize=12, fontweight='bold')
-    ax.set_ylim(55, 85)
-    ax.axhline(y=accs[0], color='gray', linestyle='--', alpha=0.5)
-    ax.grid(axis='y', alpha=0.3)
 
-    # Gemma4
-    gemma_keys = [
-        "Gemma4 26B\nzero-shot", "Gemma4 26B\ncorrect-only",
-        "Gemma4 26B\nerror-NB", "Gemma4 26B\ninterleaved",
-        "Gemma4 26B\nerror-only",
-    ]
-    ax = axes[1]
-    accs = [results[k]["overall"] * 100 if k in results else 0 for k in gemma_keys]
-    bars = ax.bar(range(len(ablation_labels)), accs, color=colors_abl, edgecolor='white', width=0.6)
-    for bar, acc in zip(bars, accs):
-        ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.5,
-                f'{acc:.1f}%', ha='center', va='bottom', fontsize=10, fontweight='bold')
-    ax.set_xticks(range(len(ablation_labels)))
-    ax.set_xticklabels(ablation_labels, fontsize=8)
-    ax.set_ylabel('Accuracy (%)', fontsize=11)
-    ax.set_title('Gemma4 26B', fontsize=12, fontweight='bold')
-    ax.set_ylim(73, 82)
-    ax.axhline(y=accs[0], color='gray', linestyle='--', alpha=0.5)
-    ax.grid(axis='y', alpha=0.3)
+    for idx, (title, keys, ylim) in enumerate(models):
+        ax = axes[idx]
+        accs = [results[k]["overall"] * 100 if k in results else 0 for k in keys]
+        bars = ax.bar(range(len(ablation_labels)), accs, color=colors_abl, edgecolor='white', width=0.6)
+        for bar, acc in zip(bars, accs):
+            ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.3,
+                    f'{acc:.1f}%', ha='center', va='bottom', fontsize=9, fontweight='bold')
+        ax.set_xticks(range(len(ablation_labels)))
+        ax.set_xticklabels(ablation_labels, fontsize=7)
+        ax.set_ylabel('Accuracy (%)', fontsize=10)
+        ax.set_title(title, fontsize=11, fontweight='bold')
+        ax.set_ylim(*ylim)
+        ax.axhline(y=accs[0], color='gray', linestyle='--', alpha=0.5)
+        ax.grid(axis='y', alpha=0.3)
 
     fig.suptitle('Ablation Study: Error Notebook Components', fontsize=14, fontweight='bold', y=1.02)
     plt.tight_layout()
